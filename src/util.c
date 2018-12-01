@@ -1413,22 +1413,13 @@ set_file_times (int fd,
 void
 cpio_set_c_name (struct cpio_file_stat *file_hdr, char *name)
 {
+  static char *buf = NULL;
   static size_t buflen = 0;
   size_t len = strlen (name) + 1;
 
-  if (buflen == 0)
-    {
-      buflen = len;
-      if (buflen < 32)
-        buflen = 32;
-      file_hdr->c_name = xmalloc (buflen);
-    }
-  else if (buflen < len)
-    {
-      buflen = len;
-      file_hdr->c_name = xrealloc (file_hdr->c_name, buflen);
-    }
-
+  while (buflen < len)
+    buf = x2realloc (buf, &buflen);
+  file_hdr->c_name = buf;
   file_hdr->c_namesize = len;
   memmove (file_hdr->c_name, name, len);
 }
