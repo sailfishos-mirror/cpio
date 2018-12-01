@@ -498,8 +498,9 @@ copy_files_disk_to_tape (int in_des, int out_des, off_t num_bytes,
 			 filename,  STRINGIFY_BIGINT (num_bytes, buf));
 	      }
 	    else
-	      error (0, 0, _("Read error at byte %lld in file %s, padding with zeros"),
-			original_num_bytes - num_bytes, filename);
+	      error (0, 0,
+		     _("Read error at byte %lld in file %s, padding with zeros"),
+		     (long long) (original_num_bytes - num_bytes), filename);
 	    write_nuls_to_file (num_bytes, out_des, tape_buffered_write);
 	    break;
 	  }
@@ -548,8 +549,9 @@ copy_files_disk_to_disk (int in_des, int out_des, off_t num_bytes,
 		       filename,  STRINGIFY_BIGINT (num_bytes, buf));
 	      }
 	    else
-	      error (0, 0, _("Read error at byte %lld in file %s, padding with zeros"),
-			original_num_bytes - num_bytes, filename);
+	      error (0, 0,
+		     _("Read error at byte %lld in file %s, padding with zeros"),
+		     (long long) (original_num_bytes - num_bytes), filename);
 	    write_nuls_to_file (num_bytes, out_des, disk_buffered_write);
 	    break;
 	  }
@@ -599,13 +601,11 @@ void
 create_all_directories (char *name)
 {
   char *dir;
-  int   mode;
 #ifdef HPUX_CDF
   int   cdf;
 #endif
 
   dir = dir_name (name);
-  mode = 0700;
 #ifdef HPUX_CDF
   cdf = islastparentcdf (name);
   if (cdf)
