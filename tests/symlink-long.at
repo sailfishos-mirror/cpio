@@ -23,14 +23,14 @@
 AT_SETUP([symlink-long])
 AT_KEYWORDS([symlink-long copyout])
 
+m4_pushdef([DIRNAME],
+[m4_if($1,0,,[xxxxxxxxx/DIRNAME(m4_decr($1))])])
+
 AT_CHECK([
 
 # len(dirname) > READBUFSIZE
-dirname=
-for i in {1..52}; do
-    dirname="xxxxxxxxx/$dirname"
-    mkdir "$dirname"
-done
+dirname=DIRNAME(52)
+AS_MKDIR_P($dirname)
 ln -s "$dirname" x || AT_SKIP_TEST
 
 echo x | cpio -o > ar
@@ -42,5 +42,7 @@ test "$list" = "$dirname" && echo success || echo fail
 ],[2 blocks
 2 blocks
 ])
+
+m4_popdef([DIRNAME])
 
 AT_CLEANUP
