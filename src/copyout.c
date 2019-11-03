@@ -587,7 +587,8 @@ process_copy_out ()
 {
   dynamic_string input_name;	/* Name of file read from stdin.  */
   struct stat file_stat;	/* Stat record for file.  */
-  struct cpio_file_stat file_hdr; /* Output header information.  */
+  struct cpio_file_stat file_hdr = CPIO_FILE_STAT_INITIALIZER;
+                                /* Output header information.  */
   int in_file_des;		/* Source file descriptor.  */
   int out_file_des;		/* Output file descriptor.  */
   char *orig_file_name = NULL;
@@ -862,6 +863,7 @@ process_copy_out ()
 	       ngettext ("%lu block\n", "%lu blocks\n",
 			 (unsigned long) blocks), (unsigned long) blocks);
     }
+  cpio_file_stat_free (&file_hdr);
 }
 
 

@@ -126,9 +126,15 @@ struct cpio_file_stat /* Internal representation of a CPIO header */
   size_t c_namesize;
   uint32_t c_chksum;
   char *c_name;
-  char *c_tar_linkname;
+  size_t c_name_buflen;
+  char const *c_tar_linkname;
 };
 
+#define CPIO_FILE_STAT_INITIALIZER \
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, 0, NULL }
+void cpio_file_stat_init (struct cpio_file_stat *file_hdr);
+void cpio_file_stat_free (struct cpio_file_stat *file_hdr);
 void cpio_set_c_name(struct cpio_file_stat *file_hdr, char *name);
+void cpio_realloc_c_name (struct cpio_file_stat *file_hdr, size_t len);
 
 #endif /* cpiohdr.h */

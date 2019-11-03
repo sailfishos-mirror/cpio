@@ -111,7 +111,7 @@ void read_in_binary (struct cpio_file_stat *file_hdr,
 		     struct old_cpio_header *short_hdr, int in_des);
 void swab_array (char *arg, int count);
 void process_copy_in (void);
-void long_format (struct cpio_file_stat *file_hdr, char *link_name);
+void long_format (struct cpio_file_stat *file_hdr, char const *link_name);
 
 /* copyout.c */
 int write_out_header (struct cpio_file_stat *file_hdr, int out_des);
@@ -121,7 +121,7 @@ void process_copy_out (void);
 void process_copy_pass (void);
 int link_to_maj_min_ino (char *file_name, int st_dev_maj, 
 			 int st_dev_min, ino_t st_ino);
-int link_to_name (char *link_name, char *link_target);
+int link_to_name (char const *link_name, char const *link_target);
 
 /* dirname.c */
 char *dirname (char *path);
@@ -140,7 +140,7 @@ void process_args (int argc, char *argv[]);
 void initialize_buffers (void);
 
 /* makepath.c */
-int make_path (char *argpath, uid_t owner, gid_t group,
+int make_path (char const *argpath, uid_t owner, gid_t group,
 	       const char *verbose_fmt_string);
 
 /* tar.c */
@@ -168,7 +168,7 @@ void copy_files_disk_to_tape (int in_des, int out_des, off_t num_bytes, char *fi
 void copy_files_disk_to_disk (int in_des, int out_des, off_t num_bytes, char *filename);
 void warn_if_file_changed (char *file_name, off_t old_file_size,
                            time_t old_file_mtime);
-void create_all_directories (char *name);
+void create_all_directories (char const *name);
 void prepare_append (int out_file_des);
 char *find_inode_file (ino_t node_num,
 		       unsigned long major_num, unsigned long minor_num);

@@ -372,7 +372,7 @@ link_to_maj_min_ino (char *file_name, int st_dev_maj, int st_dev_min,
    is created, -1 otherwise.  */
 
 int
-link_to_name (char *link_name, char *link_target)
+link_to_name (char const *link_name, char const *link_target)
 {
   int res = link (link_target, link_name);
   if (res < 0 && create_dir_flag)

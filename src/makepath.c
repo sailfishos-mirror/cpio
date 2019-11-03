@@ -49,7 +49,7 @@
    ownership and permissions when done, otherwise 1.  */
 
 int
-make_path (char *argpath,
+make_path (char const *argpath,
 	   uid_t owner,
 	   gid_t group,
 	   const char *verbose_fmt_string)

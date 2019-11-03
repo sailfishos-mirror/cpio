@@ -725,7 +725,7 @@ static time_t current_time;
    this file is a symbolic link to.  */
 
 void
-long_format (struct cpio_file_stat *file_hdr, char *link_name)
+long_format (struct cpio_file_stat *file_hdr, char const *link_name)
 {
   char mbuf[11];
   char tbuf[40];
@@ -993,17 +993,9 @@ read_in_header (struct cpio_file_stat *file_hdr, int in_des)
 static void
 read_name_from_file (struct cpio_file_stat *file_hdr, int fd, uintmax_t len)
 {
-  static char *tmp_filename;
-  static size_t buflen;
-
-  if (buflen < len)
-    {
-      buflen = len;
-      tmp_filename = xrealloc (tmp_filename, buflen);
-    }
-
-  tape_buffered_read (tmp_filename, fd, len);
-  cpio_set_c_name (file_hdr, tmp_filename);
+  cpio_realloc_c_name (file_hdr, len);
+  tape_buffered_read (file_hdr->c_name, fd, len);
+  file_hdr->c_namesize = len;
 }
 
 /* Fill in FILE_HDR by reading an old-format ASCII format cpio header from
@@ -1206,7 +1198,8 @@ process_copy_in ()
   FILE *tty_out = NULL;		/* Interactive file for rename option.  */
   FILE *rename_in = NULL;	/* Batch file for rename option.  */
   struct stat file_stat;	/* Output file stat record.  */
-  struct cpio_file_stat file_hdr;	/* Output header information.  */
+  struct cpio_file_stat file_hdr = CPIO_FILE_STAT_INITIALIZER;
+                                /* Output header information.  */
   int in_file_des;		/* Input file descriptor.  */
   char skip_file;		/* Flag for use with patterns.  */
   int i;			/* Loop index variable.  */
@@ -1219,9 +1212,7 @@ process_copy_in ()
     {
       read_pattern_file ();
     }
-  file_hdr.c_name = NULL;
-  file_hdr.c_namesize = 0;
-
+  
   if (rename_batch_file)
     {
       rename_in = fopen (rename_batch_file, "r");
@@ -1421,6 +1412,8 @@ process_copy_in ()
     fputc ('\n', stderr);
 
   apply_delayed_set_stat ();
+
+  cpio_file_stat_free (&file_hdr);
   
   if (append_flag)
     return;

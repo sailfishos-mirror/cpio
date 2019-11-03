@@ -598,7 +598,7 @@ warn_if_file_changed (char *file_name, off_t old_file_size,
    Do not destroy any nondirectories while creating directories.  */
 
 void
-create_all_directories (char *name)
+create_all_directories (char const *name)
 {
   char *dir;
 
@@ -1251,17 +1251,20 @@ set_file_times (int fd,
     utime_error (name);
 }
 
+/* Reallocate file_hdr->c_name to accomodate len bytes (including final \0) */
+void
+cpio_realloc_c_name (struct cpio_file_stat *file_hdr, size_t len)
+{
+  while (file_hdr->c_name_buflen < len)
+    file_hdr->c_name = x2realloc (file_hdr->c_name, &file_hdr->c_name_buflen);
+}
 
 void
 cpio_set_c_name (struct cpio_file_stat *file_hdr, char *name)
 {
-  static char *buf = NULL;
-  static size_t buflen = 0;
   size_t len = strlen (name) + 1;
 
-  while (buflen < len)
-    buf = x2realloc (buf, &buflen);
-  file_hdr->c_name = buf;
+  cpio_realloc_c_name (file_hdr, len);
   file_hdr->c_namesize = len;
   memmove (file_hdr->c_name, name, len);
 }
@@ -1528,3 +1531,15 @@ arf_stores_inode_p (enum archive_format arf)
   return 1;
 }
   
+void
+cpio_file_stat_init (struct cpio_file_stat *file_hdr)
+{
+  memset (file_hdr, 0, sizeof (*file_hdr));
+}
+
+void
+cpio_file_stat_free (struct cpio_file_stat *file_hdr)
+{
+  free (file_hdr->c_name);
+  cpio_file_stat_init (file_hdr);
+}
