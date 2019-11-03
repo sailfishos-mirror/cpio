@@ -43,3 +43,5 @@ m4_include([setstat03.at])
 m4_include([setstat04.at])
 m4_include([setstat05.at])
 m4_include([big-block-size.at])
+
+m4_include([CVE-2015-1197.at])

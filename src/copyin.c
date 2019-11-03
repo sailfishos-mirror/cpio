@@ -645,13 +645,14 @@ copyin_link (struct cpio_file_stat *file_hdr, int in_file_des)
       link_name = xstrdup (file_hdr->c_tar_linkname);
     }
 
+  cpio_safer_name_suffix (link_name, true, !no_abs_paths_flag, false);
+  
   res = UMASKED_SYMLINK (link_name, file_hdr->c_name,
 			 file_hdr->c_mode);
   if (res < 0 && create_dir_flag)
     {
       create_all_directories (file_hdr->c_name);
-      res = UMASKED_SYMLINK (link_name, file_hdr->c_name,
-			     file_hdr->c_mode);
+      res = UMASKED_SYMLINK (link_name, file_hdr->c_name, file_hdr->c_mode);
     }
   if (res < 0)
     {

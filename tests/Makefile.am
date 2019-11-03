@@ -56,7 +56,8 @@ TESTSUITE_AT = \
  symlink-long.at\
  symlink-to-stdout.at\
  version.at\
- big-block-size.at
+ big-block-size.at\
+ CVE-2015-1197.at
 
 TESTSUITE = $(srcdir)/testsuite
 
