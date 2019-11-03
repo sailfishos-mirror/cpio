@@ -116,6 +116,10 @@ void long_format (struct cpio_file_stat *file_hdr, char const *link_name);
 /* copyout.c */
 int write_out_header (struct cpio_file_stat *file_hdr, int out_des);
 void process_copy_out (void);
+int to_ascii (char *where, uintmax_t v, size_t digits, unsigned logbase,
+	      bool nul);
+void field_width_error (const char *filename, const char *fieldname,
+			uintmax_t value, size_t width, bool nul);
 
 /* copypass.c */
 void process_copy_pass (void);
@@ -144,7 +148,7 @@ int make_path (char const *argpath, uid_t owner, gid_t group,
 	       const char *verbose_fmt_string);
 
 /* tar.c */
-void write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des);
+int write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des);
 int null_block (long *block, int size);
 void read_in_tar_header (struct cpio_file_stat *file_hdr, int in_des);
 int otoa (char *s, unsigned long *n);
@@ -203,9 +207,16 @@ void cpio_safer_name_suffix (char *name, bool link_target,
 int cpio_create_dir (struct cpio_file_stat *file_hdr, int existing_dir);
 void change_dir (void);
 
-/* FIXME: These two defines should be defined in paxutils */
+/* FIXME: The following three should be defined in paxutils */
 #define LG_8  3
 #define LG_16 4
+/* The maximum uintmax_t value that can be represented with DIGITS digits,
+   assuming that each digit is BITS_PER_DIGIT wide.  */
+#define MAX_VAL_WITH_DIGITS(digits, bits_per_digit) \
+   ((digits) * (bits_per_digit) < sizeof (uintmax_t) * CHAR_BIT \
+    ? ((uintmax_t) 1 << ((digits) * (bits_per_digit))) - 1 \
+    : (uintmax_t) -1)
+
 
 uintmax_t from_ascii (char const *where, size_t digs, unsigned logbase);
 

@@ -1,6 +1,5 @@
 /* tar.c - read in write tar headers for cpio
-   Copyright (C) 1992, 2001, 2004, 2006-2007, 2010, 2014-2015, 2017 Free
-   Software Foundation, Inc.
+   Copyright (C) 1992-2019 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -79,36 +78,17 @@ stash_tar_filename (char *prefix, char *filename)
   return hold_tar_filename;
 }
 
-/* Convert a number into a string of octal digits.
-   Convert long VALUE into a DIGITS-digit field at WHERE,
-   including a trailing space and room for a NUL.  DIGITS==3 means
-   1 digit, a space, and room for a NUL.
-
-   We assume the trailing NUL is already there and don't fill it in.
-   This fact is used by start_header and finish_header, so don't change it!
-
-   This is be equivalent to:
-   sprintf (where, "%*lo ", digits - 2, value);
-   except that sprintf fills in the trailing NUL and we don't.  */
-
-static void
-to_oct (register long value, register int digits, register char *where)
+static int
+to_oct_or_error (uintmax_t value, size_t digits, char *where, char const *field,
+		 char const *file)
 {
-  --digits;			/* Leave the trailing NUL slot alone.  */
-
-  /* Produce the digits -- at least one.  */
-  do
+  if (to_ascii (where, value, digits, LG_8, true))
     {
-      where[--digits] = '0' + (char) (value & 7); /* One octal digit.  */
-      value >>= 3;
+      field_width_error (file, field, value, digits, true);
+      return 1;
     }
-  while (digits > 0 && value != 0);
-
-  /* Add leading zeroes, if necessary.  */
-  while (digits > 0)
-    where[--digits] = '0';
+  return 0;
 }
-
 
 
 /* Compute and return a checksum for TAR_HDR,
@@ -134,10 +114,22 @@ tar_checksum (struct tar_header *tar_hdr)
   return sum;
 }
 
+#define TO_OCT(file_hdr, c_fld, digits, tar_hdr, tar_field) \
+  do							    \
+    {							    \
+       if (to_oct_or_error (file_hdr -> c_fld,		    \
+			    digits,			    \
+			    tar_hdr -> tar_field,	    \
+			    #tar_field,			    \
+			    file_hdr->c_name))		    \
+	 return 1;					    \
+    }							    \
+  while (0)
+
 /* Write out header FILE_HDR, including the file name, to file
    descriptor OUT_DES.  */
 
-void
+int
 write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
 {
   int name_len;
@@ -166,11 +158,11 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
 
   /* Ustar standard (POSIX.1-1988) requires the mode to contain only 3 octal
      digits */
-  to_oct (file_hdr->c_mode & MODE_ALL, 8, tar_hdr->mode);
-  to_oct (file_hdr->c_uid, 8, tar_hdr->uid);
-  to_oct (file_hdr->c_gid, 8, tar_hdr->gid);
-  to_oct (file_hdr->c_filesize, 12, tar_hdr->size);
-  to_oct (file_hdr->c_mtime, 12, tar_hdr->mtime);
+  TO_OCT (file_hdr, c_mode & MODE_ALL, 8, tar_hdr, mode);
+  TO_OCT (file_hdr, c_uid, 8, tar_hdr, uid);
+  TO_OCT (file_hdr, c_gid, 8, tar_hdr, gid);
+  TO_OCT (file_hdr, c_filesize, 12, tar_hdr, size);
+  TO_OCT (file_hdr, c_mtime, 12, tar_hdr, mtime);
 
   switch (file_hdr->c_mode & CP_IFMT)
     {
@@ -182,7 +174,7 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
 	  strncpy (tar_hdr->linkname, file_hdr->c_tar_linkname,
 		   TARLINKNAMESIZE);
 	  tar_hdr->typeflag = LNKTYPE;
-	  to_oct (0, 12, tar_hdr->size);
+	  to_ascii (tar_hdr->size, 0, 12, LG_8, true);
 	}
       else
 	tar_hdr->typeflag = REGTYPE;
@@ -208,7 +200,7 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
 	 than TARLINKNAMESIZE.  */
       strncpy (tar_hdr->linkname, file_hdr->c_tar_linkname,
 	       TARLINKNAMESIZE);
-      to_oct (0, 12, tar_hdr->size);
+      to_ascii (tar_hdr->size, 0, 12, LG_8, true);
       break;
 #endif /* CP_IFLNK */
     }
@@ -227,13 +219,15 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
       if (name)
 	strcpy (tar_hdr->gname, name);
 
-      to_oct (file_hdr->c_rdev_maj, 8, tar_hdr->devmajor);
-      to_oct (file_hdr->c_rdev_min, 8, tar_hdr->devminor);
+      TO_OCT (file_hdr, c_rdev_maj, 8, tar_hdr, devmajor);
+      TO_OCT (file_hdr, c_rdev_min, 8, tar_hdr, devminor);
     }
 
-  to_oct (tar_checksum (tar_hdr), 8, tar_hdr->chksum);
+  to_ascii (tar_hdr->chksum, tar_checksum (tar_hdr), 8, LG_8, true);
 
   tape_buffered_write ((char *) &tar_rec, out_des, TARRECORDSIZE);
+
+  return 0;
 }
 
 /* Return nonzero iff all the bytes in BLOCK are NUL.

@@ -269,26 +269,32 @@ writeout_final_defers (int out_des)
    so it should be moved to paxutils too.
    Allowed values for logbase are: 1 (binary), 2, 3 (octal), 4 (hex) */
 int
-to_ascii (char *where, uintmax_t v, size_t digits, unsigned logbase)
+to_ascii (char *where, uintmax_t v, size_t digits, unsigned logbase, bool nul)
 {
   static char codetab[] = "0123456789ABCDEF";
-  int i = digits;
-  
-  do
+
+  if (nul)
+    where[--digits] = 0;
+  while (digits > 0)
     {
-      where[--i] = codetab[(v & ((1 << logbase) - 1))];
+      where[--digits] = codetab[(v & ((1 << logbase) - 1))];
       v >>= logbase;
     }
-  while (i);
 
   return v != 0;
 }
 
-static void
-field_width_error (const char *filename, const char *fieldname)
+void
+field_width_error (const char *filename, const char *fieldname,
+		   uintmax_t value, size_t width, bool nul)
 {
-  error (0, 0, _("%s: field width not sufficient for storing %s"),
-	 filename, fieldname);
+  char valbuf[UINTMAX_STRSIZE_BOUND + 1];
+  char maxbuf[UINTMAX_STRSIZE_BOUND + 1];
+  error (0, 0, _("%s: value %s %s out of allowed range 0..%s"),
+	 filename, fieldname,
+	 STRINGIFY_BIGINT (value, valbuf),
+	 STRINGIFY_BIGINT (MAX_VAL_WITH_DIGITS (width - nul, LG_8),
+			   maxbuf));
 }
 
 static void
@@ -303,7 +309,7 @@ to_ascii_or_warn (char *where, uintmax_t n, size_t digits,
 		  unsigned logbase,
 		  const char *filename, const char *fieldname)
 {
-  if (to_ascii (where, n, digits, logbase))
+  if (to_ascii (where, n, digits, logbase, false))
     field_width_warning (filename, fieldname);
 }    
 
@@ -312,9 +318,9 @@ to_ascii_or_error (char *where, uintmax_t n, size_t digits,
 		   unsigned logbase,
 		   const char *filename, const char *fieldname)
 {
-  if (to_ascii (where, n, digits, logbase))
+  if (to_ascii (where, n, digits, logbase, false))
     {
-      field_width_error (filename, fieldname);
+      field_width_error (filename, fieldname, n, digits, false);
       return 1;
     }
   return 0;
@@ -371,7 +377,7 @@ write_out_new_ascii_header (const char *magic_string,
 			 _("name size")))
     return 1;
   p += 8;
-  to_ascii (p, file_hdr->c_chksum & 0xffffffff, 8, LG_16);
+  to_ascii (p, file_hdr->c_chksum & 0xffffffff, 8, LG_16, false);
 
   tape_buffered_write (ascii_header, out_des, sizeof ascii_header);
 
@@ -388,7 +394,7 @@ write_out_old_ascii_header (dev_t dev, dev_t rdev,
   char ascii_header[76];
   char *p = ascii_header;
   
-  to_ascii (p, file_hdr->c_magic, 6, LG_8);
+  to_ascii (p, file_hdr->c_magic, 6, LG_8, false);
   p += 6;
   to_ascii_or_warn (p, dev, 6, LG_8, file_hdr->c_name, _("device number"));
   p += 6;
@@ -492,7 +498,10 @@ write_out_binary_header (dev_t rdev,
   short_hdr.c_namesize = file_hdr->c_namesize & 0xFFFF;
   if (short_hdr.c_namesize != file_hdr->c_namesize)
     {
-      field_width_error (file_hdr->c_name, _("name size"));
+      char maxbuf[UINTMAX_STRSIZE_BOUND + 1];
+      error (0, 0, _("%s: value %s %s out of allowed range 0..%u"),
+	     file_hdr->c_name, _("name size"),
+	     STRINGIFY_BIGINT (file_hdr->c_namesize, maxbuf), 0xFFFFu);
       return 1;
     }
 		      
@@ -502,7 +511,10 @@ write_out_binary_header (dev_t rdev,
   if (((off_t)short_hdr.c_filesizes[0] << 16) + short_hdr.c_filesizes[1]
        != file_hdr->c_filesize)
     {
-      field_width_error (file_hdr->c_name, _("file size"));
+      char maxbuf[UINTMAX_STRSIZE_BOUND + 1];
+      error (0, 0, _("%s: value %s %s out of allowed range 0..%lu"),
+	     file_hdr->c_name, _("file size"),
+	     STRINGIFY_BIGINT (file_hdr->c_namesize, maxbuf), 0xFFFFFFFFlu);
       return 1;
     }
 		      
@@ -552,8 +564,7 @@ write_out_header (struct cpio_file_stat *file_hdr, int out_des)
 	  error (0, 0, _("%s: file name too long"), file_hdr->c_name);
 	  return 1;
 	}
-      write_out_tar_header (file_hdr, out_des); /* FIXME: No error checking */
-      return 0;
+      return write_out_tar_header (file_hdr, out_des);
 
     case arf_binary:
       return write_out_binary_header (makedev (file_hdr->c_rdev_maj,
