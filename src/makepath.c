@@ -74,24 +74,9 @@ make_path (char *argpath,
 	slash++;
       while ((slash = strchr (slash, '/')))
 	{
-#ifdef HPUX_CDF
-	  int	iscdf;
-	  iscdf = 0;
-#endif
 	  *slash = '\0';
 	  if (stat (dirpath, &stats))
 	    {
-#ifdef HPUX_CDF
-	      /* If this component of the pathname ends in `+' and is
-		 followed by 2 `/'s, then this is a CDF.  We remove the
-		 `+' from the name and create the directory.  Later
-		 we will "hide" the directory.  */
-	      if ( (*(slash +1) == '/') && (*(slash -1) == '+') )
-		{ 
-		  iscdf = 1;
-		  *(slash -1) = '\0';
-		}
-#endif
 	      if (mkdir (dirpath, tmpmode ^ invert_permissions))
 		{
 		  error (0, errno, _("cannot make directory `%s'"), dirpath);
@@ -113,18 +98,6 @@ make_path (char *argpath,
 		      
 		      delay_set_stat (dirpath, &stats, invert_permissions);
 		    }
-		  
-#ifdef HPUX_CDF
-		  if (iscdf)
-		    {
-		      /*  If this is a CDF, "hide" the directory by setting
-			  its hidden/setuid bit.  Also add the `+' back to
-			  its name (since once it's "hidden" we must refer
-			  to as `name+' instead of `name').  */
-		      chmod (dirpath, 04700);
-		      *(slash - 1) = '+';
-		    }
-#endif
 		}
 	    }
 	  else if (!S_ISDIR (stats.st_mode))

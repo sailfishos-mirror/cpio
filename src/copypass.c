@@ -60,10 +60,6 @@ process_copy_pass ()
   int in_file_des;		/* Input file descriptor.  */
   int out_file_des;		/* Output file descriptor.  */
   int existing_dir;		/* True if file is a dir & already exists.  */
-#ifdef HPUX_CDF
-  int cdf_flag;
-  int cdf_char;
-#endif
 
   newdir_umask = umask (0);     /* Reset umask to preserve modes of
 				   created files  */
@@ -120,13 +116,6 @@ process_copy_pass ()
       /* Make the name of the new file.  */
       for (slash = input_name.ds_string; *slash == '/'; ++slash)
 	;
-#ifdef HPUX_CDF
-      /* For CDF's we add a 2nd `/' after all "hidden" directories.
-	 This kind of a kludge, but it's what we do when creating
-	 archives, and it's easier to do this than to separately
-	 keep track of which directories in a path are "hidden".  */
-      slash = add_cdf_double_slashes (slash);
-#endif
       ds_resize (&output_name, dirname_len + strlen (slash) + 2);
       strcpy (output_name.ds_string + dirname_len + 1, slash);
 

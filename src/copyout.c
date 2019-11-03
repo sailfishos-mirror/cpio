@@ -659,27 +659,7 @@ process_copy_out ()
 	  assign_string (&orig_file_name, input_name.ds_string);
 	  cpio_safer_name_suffix (input_name.ds_string, false,
 				  !no_abs_paths_flag, true);
-#ifndef HPUX_CDF
 	  cpio_set_c_name (&file_hdr, input_name.ds_string);
-#else
-	  if ( (archive_format != arf_tar) && (archive_format != arf_ustar) )
-	    {
-	      /* We mark CDF's in cpio files by adding a 2nd `/' after the
-		 "hidden" directory name.  We need to do this so we can
-		 properly recreate the directory as hidden (in case the
-		 files of a directory go into the archive before the
-		 directory itself (e.g from "find ... -depth ... | cpio")).  */
-              cpio_set_c_name (&file_hdr,
-                               add_cdf_double_slashes (input_name.ds_string));
-	    }
-	  else
-	    {
-	      /* We don't mark CDF's in tar files.  We assume the "hidden"
-		 directory will always go into the archive before any of
-		 its files.  */
-              cpio_set_c_name (&file_hdr, input_name.ds_string);
-	    }
-#endif
 
 	  /* Copy the named file to the output.  */
 	  switch (file_hdr.c_mode & CP_IFMT)
