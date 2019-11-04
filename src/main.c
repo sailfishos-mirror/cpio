@@ -598,8 +598,7 @@ process_args (int argc, char *argv[])
 	copy_function = process_copy_in;
       else
 	USAGE_ERROR ((0, 0,
-	       _("You must specify one of -oipt options.\nTry `%s --help' or `%s --usage' for more information.\n"),
-		      program_name, program_name));
+		      _("You must specify one of -oipt options.")));
     }
 
   /* Work around for pcc bug.  */
