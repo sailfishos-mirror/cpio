@@ -28,9 +28,7 @@
 #include <strings.h>
 #endif
 #include "dstring.h"
-
-char *xmalloc (unsigned n);
-char *xrealloc (char *p, unsigned n);
+#include <xalloc.h>
 
 /* Initialiaze dynamic string STRING with space for SIZE characters.  */
 

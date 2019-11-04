@@ -191,7 +191,7 @@ setst (unsigned short bits, char *chars)
    `struct stat' is given as an argument.  */
 
 void
-mode_string (unsigned short mode, char *str)
+mode_string (unsigned int mode, char *str)
 {
   str[0] = ftypelet ((long) mode);
   rwx ((mode & 0700) << 0, &str[1]);

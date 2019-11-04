@@ -966,8 +966,13 @@ information when reporting a bug. The information needed is:
 @item Conditions under which the bug appears.
 @end itemize 
 
-Send your report to <bug-cpio@@gnu.org>. Allow us a couple of
-days to answer.
+Send your report to <bug-cpio@@gnu.org>.  This is a public mailing
+list; all correspondence sent to it is archived and is available at
+@uref{https://lists.gnu.org/archive/html/bug-cpio}.  Your bug report
+will be visible there, too.  The list is not limited to bug reports,
+in fact it is dedicated to any kind of technical discussions regarding
+GNU @command{cpio}.  If you wish to subscribe to it, visit
+@uref{https://lists.gnu.org/mailman/listinfo/bug-cpio}.
 
 @node Concept Index
 @unnumbered Concept Index

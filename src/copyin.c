@@ -178,7 +178,7 @@ list_file (struct cpio_file_stat* file_hdr, int in_file_des)
 
 static int
 try_existing_file (struct cpio_file_stat* file_hdr, int in_file_des,
-		   int *existing_dir)
+		   bool *existing_dir)
 {
   struct stat file_stat;
 
@@ -675,7 +675,7 @@ copyin_link (struct cpio_file_stat *file_hdr, int in_file_des)
 static void
 copyin_file (struct cpio_file_stat *file_hdr, int in_file_des)
 {
-  int existing_dir;
+  bool existing_dir = false;
 
   if (!to_stdout_option
       && try_existing_file (file_hdr, in_file_des, &existing_dir) < 0)
