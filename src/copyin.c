@@ -889,30 +889,34 @@ read_in_header (struct cpio_file_stat *file_hdr, int in_des)
 
   if (archive_format == arf_unknown)
     {
-      char tmpbuf[512];
+      union
+      {
+	char s[512];
+	unsigned short us;
+      }	tmpbuf;
       int check_tar;
       int peeked_bytes;
 
       while (archive_format == arf_unknown)
 	{
-	  peeked_bytes = tape_buffered_peek (tmpbuf, in_des, 512);
+	  peeked_bytes = tape_buffered_peek (tmpbuf.s, in_des, 512);
 	  if (peeked_bytes < 6)
 	    error (PAXEXIT_FAILURE, 0, _("premature end of archive"));
 
-	  if (!strncmp (tmpbuf, "070701", 6))
+	  if (!strncmp (tmpbuf.s, "070701", 6))
 	    archive_format = arf_newascii;
-	  else if (!strncmp (tmpbuf, "070707", 6))
+	  else if (!strncmp (tmpbuf.s, "070707", 6))
 	    archive_format = arf_oldascii;
-	  else if (!strncmp (tmpbuf, "070702", 6))
+	  else if (!strncmp (tmpbuf.s, "070702", 6))
 	    {
 	      archive_format = arf_crcascii;
 	      crc_i_flag = true;
 	    }
-	  else if ((*((unsigned short *) tmpbuf) == 070707) ||
-		   (*((unsigned short *) tmpbuf) == swab_short ((unsigned short) 070707)))
+	  else if (tmpbuf.us == 070707
+		   || tmpbuf.us == swab_short ((unsigned short) 070707))
 	    archive_format = arf_binary;
 	  else if (peeked_bytes >= 512
-		   && (check_tar = is_tar_header (tmpbuf)))
+		   && (check_tar = is_tar_header (tmpbuf.s)))
 	    {
 	      if (check_tar == 2)
 		archive_format = arf_ustar;
@@ -921,7 +925,7 @@ read_in_header (struct cpio_file_stat *file_hdr, int in_des)
 	    }
 	  else
 	    {
-	      tape_buffered_read ((char *) tmpbuf, in_des, 1L);
+	      tape_buffered_read (tmpbuf.s, in_des, 1L);
 	      ++bytes_skipped;
 	    }
 	}

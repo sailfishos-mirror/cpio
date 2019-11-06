@@ -1,7 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl This file is part of GNU cpio
-dnl Copyright (C) 2003-2007, 2009-2010, 2014-2015, 2017 Free Software
-dnl Foundation, Inc.
+dnl Copyright (C) 2003-2019 Free Software Foundation, Inc.
 dnl
 dnl This program is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -16,7 +15,7 @@ dnl
 dnl You should have received a copy of the GNU General Public License
 dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT([GNU cpio], [2.12], [bug-cpio@gnu.org],,
+AC_INIT([GNU cpio], [2.13], [bug-cpio@gnu.org],,
         [http://www.gnu.org/software/cpio])
 AC_CONFIG_SRCDIR(src/cpio.h)
 AC_CONFIG_AUX_DIR([build-aux])
