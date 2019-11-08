@@ -1000,7 +1000,14 @@ read_name_from_file (struct cpio_file_stat *file_hdr, int fd, uintmax_t len)
 {
   cpio_realloc_c_name (file_hdr, len);
   tape_buffered_read (file_hdr->c_name, fd, len);
-  file_hdr->c_namesize = len;
+  if (file_hdr->c_name[len-1] == 0)
+    file_hdr->c_namesize = len;
+  else
+    {
+      error (0, 0, _("malformed header: file name is not nul-terminated"));
+      /* Skip this file */
+      file_hdr->c_namesize = 0;
+    }
 }
 
 /* Fill in FILE_HDR by reading an old-format ASCII format cpio header from
