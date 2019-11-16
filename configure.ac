@@ -45,6 +45,8 @@ AC_TYPE_UID_T
 AC_CHECK_TYPE(gid_t, int)
 AC_HEADER_STDC
 AC_HEADER_DIRENT
+AC_COMPILE_CHECK_RETTYPE([major], [0])
+AC_COMPILE_CHECK_RETTYPE([minor], [0])
 
 AC_CHECK_FUNCS([fchmod fchown])
 # This is needed for mingw build

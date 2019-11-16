@@ -119,10 +119,10 @@ struct cpio_file_stat /* Internal representation of a CPIO header */
   size_t c_nlink;
   time_t c_mtime;
   off_t c_filesize;
-  long c_dev_maj;
-  long c_dev_min;
-  long c_rdev_maj;
-  long c_rdev_min;
+  unsigned RETTYPE_MAJOR c_dev_maj;
+  unsigned RETTYPE_MINOR c_dev_min;
+  unsigned RETTYPE_MAJOR c_rdev_maj;
+  unsigned RETTYPE_MINOR c_rdev_min;
   size_t c_namesize;
   uint32_t c_chksum;
   char *c_name;
