@@ -1,7 +1,7 @@
 # Makefile for GNU tar library.			-*- Makefile -*-
 
 # Copyright (C) 1994-1997, 1999-2001, 2003-2007, 2009-2010, 2014-2015,
-# 2017 Free Software Foundation, Inc.
+# 2017, 2020 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

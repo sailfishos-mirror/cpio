@@ -1,5 +1,5 @@
 /* dstring.h - Dynamic string handling include file.  Requires strings.h.
-   Copyright (C) 1990-1992, 2004, 2007, 2010, 2014-2015, 2017 Free
+   Copyright (C) 1990-1992, 2004, 2007, 2010, 2014-2015, 2017, 2020 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
