@@ -52,10 +52,11 @@ Boston, MA 02110-1301, USA @*
 @insertcopying
 
 @ifinfo
-GNU cpio is a tool for creating and extracting archives, or copying
-files from one place to another.  It handles a number of cpio formats as
-well as reading and writing tar files.  This is the first edition of the 
-GNU cpio documentation and is consistent with @value{VERSION}.
+GNU @command{cpio} is a tool for creating and extracting archives, or
+copying files from one place to another.  It handles a number of
+@command{cpio} formats as well as reading and writing @command{tar}
+files.  This is the first edition of the GNU @command{cpio}
+documentation and is consistent with @value{VERSION}.
 @end ifinfo
 @end ifnottex
 
@@ -83,16 +84,18 @@ Invoking cpio
 @node Introduction
 @chapter Introduction
 
-GNU cpio copies files into or out of a cpio or tar archive, The archive
-can be another file on the disk, a magnetic tape, or a pipe.
+GNU @command{cpio} copies files into or out of a @command{cpio} or
+@command{tar} archive, The archive can be another file on the disk, a
+magnetic tape, or a pipe.
 
-GNU cpio supports the following archive formats: binary, old ASCII, new
-ASCII, crc, HPUX binary, HPUX old ASCII, old tar, and POSIX.1 tar.  The
-tar format is provided for compatibility with the @command{tar} program. By
-default, cpio creates binary format archives, for compatibility with
-older cpio programs.  When extracting from archives, cpio automatically
-recognizes which kind of archive it is reading and can read archives
-created on machines with a different byte-order.
+GNU @command{cpio} supports the following archive formats: binary, old
+ASCII, new ASCII, crc, HPUX binary, HPUX old ASCII, old tar, and
+POSIX.1 tar.  The tar format is provided for compatibility with the
+@command{tar} program. By default, @command{cpio} creates binary
+format archives, for compatibility with older @command{cpio} programs.
+When extracting from archives, @command{cpio} automatically recognizes
+which kind of archive it is reading and can read archives created on
+machines with a different byte-order.
 
 @node Tutorial
 @chapter Tutorial
@@ -102,17 +105,17 @@ created on machines with a different byte-order.
 @cindex passing directory structures
 
 
-GNU cpio performs three primary functions.  Copying files to an
+GNU @command{cpio} performs three primary functions.  Copying files to an
 archive, Extracting files from an archive, and passing files to another
 directory tree.  An archive can be a file on disk, one or more floppy
 disks, or one or more tapes.
 
-When creating an archive, cpio takes the list of files to be processed
-from the standard input, and then sends the archive to the standard
+When creating an archive, @command{cpio} takes the list of files to be
+processed from the standard input, and then sends the archive to the standard
 output, or to the device defined by the @option{-F} option.
-@xref{Copy-out mode}.  Usually find or ls is used to provide this list
-to the standard input.  In the following example you can see the
-possibilities for archiving the contents of a single directory.
+@xref{Copy-out mode}.  Usually @command{find} or @command{ls} is used
+to provide this list to the standard input.  In the following example
+you can see the possibilities for archiving the contents of a single directory.
 
 
 @example
@@ -124,12 +127,11 @@ possibilities for archiving the contents of a single directory.
 The @option{-o} option creates the archive, and the @option{-v} option
 prints the names of the files archived as they are added.  Notice that
 the options can be put together after a single @option{-} or can be placed
-separately on the command line.  The @samp{>} redirects the cpio output
-to the file @samp{directory.cpio}.
+separately on the command line.  The @samp{>} redirects the
+@command{cpio} output to the file @file{directory.cpio}.
 
-
-If you wanted to archive an entire directory tree, the find command can
-provide the file list to cpio:
+If you wanted to archive an entire directory tree, the @command{find}
+command can provide the file list to @command{cpio}:
 
 
 @example
@@ -140,27 +142,28 @@ provide the file list to cpio:
 
 
 This will take all the files in the current directory, the directories
-below and place them in the archive tree.cpio.  Again the @option{-o}
+below and place them in the archive @file{tree.cpio}.  Again the @option{-o}
 creates an archive, and the @option{-v} option shows you the name of the
 files as they are archived.  @xref{Copy-out mode}.  Using the @samp{.} in the
-find statement will give you more flexibility when doing restores, as it
-will save file names with a relative path vice a hard wired, absolute
-path.  The @option{-depth} option forces @samp{find} to print of the
-entries in a directory before printing the directory itself.  This
-limits the effects of restrictive directory permissions by printing the
-directory entries in a directory before the directory name itself.
+@command{find} statement will give you more flexibility when doing
+restores, as it will save file names with a relative path vice a hard
+wired, absolute path.  The @option{-depth} option forces @command{find}
+to print of the entries in a directory before printing the directory
+itself.  This limits the effects of restrictive directory permissions
+by printing the directory entries in a directory before the directory
+name itself.
 
 Extracting an archive requires a bit more thought.  First of all, by
-default cpio extracts the files with exactly the same name as stored
-in the archive.  That means that if the archive contains absolute
+default @command{cpio} extracts the files with exactly the same name
+as stored in the archive.  That means that if the archive contains absolute
 paths, you will extract files to their absolute locations no matter
 what directory you're in when running the command.  You can instruct
-cpio to remove leading slashes using the
+@command{cpio} to remove leading slashes using the
 @option{--no-absolute-filenames} option.  Nevertheless, the good
 practice is to always test the archive using @command{cpio -t} prior
 to extracting it.
 
-Furthermore, cpio will not create directories by default.
+Furthermore, @command{cpio} will not create directories by default.
 Another characteristic, is it will not overwrite existing files unless
 you tell it to.
 
@@ -170,7 +173,7 @@ you tell it to.
 @end cartouche
 @end example
 
-This will retrieve the files archived in the file directory.cpio and
+This will retrieve the files archived in the file @file{directory.cpio} and
 restore them to their locations.  The @option{-i} option extracts the
 archive and the @option{-v} shows the file names as they are extracted.
 If you are dealing with an archived directory tree, you need to use the
@@ -182,15 +185,15 @@ If you are dealing with an archived directory tree, you need to use the
 @end cartouche
 @end example
 
-This will take the contents of the archive tree.cpio and extract it.
+This will take the contents of the archive @file{tree.cpio} and extract it.
 If you try to extract the files on top of files of the same name that
-already exist (and have the same or later modification time) cpio will
-not extract the file unless told to do so by the -u option.
-@xref{Copy-in mode}.
+already exist (and have the same or later modification time)
+@command{cpio} will not extract the file unless told to do so by the
+@option{-u} option.  @xref{Copy-in mode}.
 
 
-In copy-pass mode, cpio copies files from one directory tree to another,
-combining the copy-out and copy-in steps without actually using an
+In copy-pass mode, @command{cpio} copies files from one directory tree
+to another, combining the copy-out and copy-in steps without actually using an
 archive.  It reads the list of files to copy from the standard input;
 the directory into which it will copy them is given as a non-option
 argument.  @xref{Copy-pass mode}.
@@ -204,11 +207,12 @@ argument.  @xref{Copy-pass mode}.
 
 The example shows copying the files of the present directory, and
 sub-directories to a new directory called new-dir.  Some new options are
-the @option{-print0} available with GNU find, combined with the
-@option{--null} option of cpio.  These two options act together to send
-file names between find and cpio, even if special characters are
-embedded in the file names.  Another is @option{-p}, which tells cpio to
-pass the files it finds to the directory @samp{new-dir}.
+the @option{-print0} available with GNU @command{find}, combined with the
+@option{--null} option of @command{cpio}.  These two options act
+together to send file names between @command{find} and @command{cpio},
+even if special characters are embedded in the file names.  Another is
+@option{-p}, which tells @command{cpio} to pass the files it finds to
+the directory @file{new-dir}.
 
 @node Invoking cpio
 @chapter Invoking cpio
@@ -228,10 +232,10 @@ pass the files it finds to the directory @samp{new-dir}.
 @cindex copy-out
 @cindex archive creation
 @cindex create archive
-In copy-out mode, cpio copies files into an archive.  It reads a list
+In copy-out mode, @command{cpio} copies files into an archive.  It reads a list
 of filenames, one per line, on the standard input, and writes the
 archive onto the standard output.  A typical way to generate the list
-of filenames is with the find command; you should give @command{find}
+of filenames is with the @command{find} command; you should give @command{find}
 the @option{-depth} option to minimize problems with permissions on
 directories that are unreadable.
 
@@ -322,14 +326,14 @@ for a detailed discussion of these.
 @cindex copy-in
 @cindex archive extraction
 @cindex extract files from an archive
-In copy-in mode, cpio copies files from an archive into the filesystem
-or lists the archive contents.  It reads the archive from the standard
-input.  Any non-option command line arguments are shell globbing
-patterns; only files in the archive whose names match one or more of
-those patterns are copied from the archive.  Unlike in the shell, an
-initial @samp{.} in a filename does match a wildcard at the start of a
-pattern, and a @samp{/} in a filename can match wildcards.  If no
-patterns are given, all files are extracted.
+In copy-in mode, @command{cpio} copies files from an archive into the
+filesystem or lists the archive contents.  It reads the archive from
+the standard input.  Any non-option command line arguments are shell
+globbing patterns; only files in the archive whose names match one or
+more of those patterns are copied from the archive.  Unlike in the
+shell, an initial @samp{.} in a filename does match a wildcard at the
+start of a pattern, and a @samp{/} in a filename can match wildcards.
+If no patterns are given, all files are extracted.
 
 The copy-in mode is requested by the @option{-i} (@option{--extract})
 command line option.
@@ -434,7 +438,7 @@ for a detailed discussion of these.
 @cindex copy-pass
 @cindex copy files between filesystems
 
-In copy-pass mode, cpio copies files from one directory tree to
+In copy-pass mode, @command{cpio} copies files from one directory tree to
 another, combining the copy-out and copy-in steps without actually
 using an archive.  It reads the list of files to copy from the
 standard input; the directory into which it will copy them is given as
@@ -573,7 +577,7 @@ which this option is valid.
 [@ref{copy-in},@ref{copy-out},@ref{copy-pass}]
 @*Read a list of filenames terminated by a null character, instead of a
 newline, so that files whose names contain newlines can be archived.
-GNU find is one way to produce a list of null-terminated filenames.
+GNU @command{find} is one way to produce a list of null-terminated filenames.
 This option may be used in copy-out and copy-pass modes.
 
 @item -a
@@ -658,7 +662,7 @@ the current working directory, then change to the directory
 [@ref{copy-in}]
 @*Read additional patterns specifying filenames to extract or list from
 @var{file}.  The lines of @var{file} are treated as if they had been non-option
-arguments to cpio.  This option is used in copy-in mode,
+arguments to @command{cpio}.  This option is used in copy-in mode,
 
 @item -f
 @itemx --nonmatching
@@ -711,15 +715,15 @@ The new (SVR4) portable format with a checksum added.
 The old tar format. (8589934591 bytes)
 
 @item ustar
-The POSIX.1 tar format.  Also recognizes GNU tar archives, which are
+The POSIX.1 tar format.  Also recognizes GNU @command{tar} archives, which are
 similar but not identical. (8589934591 bytes)
 
 @item hpbin
-The obsolete binary format used by HPUX's cpio (which stores device
+The obsolete binary format used by HPUX's @command{cpio} (which stores device
 files differently).
 
 @item hpodc
-The portable format used by HPUX's cpio (which stores device files
+The portable format used by HPUX's @command{cpio} (which stores device files
 differently).
 @end table
 
@@ -859,8 +863,8 @@ used.
 
 @item --rsh-command=@var{command}
 [@ref{copy-in},@ref{copy-out},@ref{copy-pass}]
-@*Notifies cpio that is should use @var{command} to communicate with remote
-devices.
+@*Notifies @command{cpio} that is should use @var{command} to
+communicate with remote devices.
 
 @item -s
 @itemx --swap-bytes
@@ -898,7 +902,7 @@ existing newer files with older files.
 @item -v
 @itemx --verbose
 [@ref{copy-in},@ref{copy-out},@ref{copy-pass}]
-@*List the files processed, or with @option{-t}, give an @samp{ls -l} style
+@*List the files processed, or with @option{-t}, give an @command{ls -l} style
 table of contents listing.  In a verbose table of contents of a ustar
 archive, user and group names in the archive that do not exist on the
 local system are replaced by the names that correspond locally to the
@@ -910,7 +914,7 @@ numeric UID and GID stored in the archive.
 @*Print a @samp{.} for each file processed.
 
 @item --version
-Print the cpio program version number and exit.
+Print the @command{cpio} program version number and exit.
 
 @anchor{warning}
 @item -W
@@ -966,7 +970,7 @@ information when reporting a bug. The information needed is:
 @item Conditions under which the bug appears.
 @end itemize 
 
-Send your report to <bug-cpio@@gnu.org>.  This is a public mailing
+Send your report to @email{bug-cpio@@gnu.org}.  This is a public mailing
 list; all correspondence sent to it is archived and is available at
 @uref{https://lists.gnu.org/archive/html/bug-cpio}.  Your bug report
 will be visible there, too.  The list is not limited to bug reports,

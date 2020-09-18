@@ -13,7 +13,7 @@
 .\"
 .\" You should have received a copy of the GNU General Public License
 .\" along with GNU cpio.  If not, see <http://www.gnu.org/licenses/>.
-.TH CPIO 1 "June 21, 2018" "CPIO" "GNU CPIO"
+.TH CPIO 1 "September 18, 2020" "CPIO" "GNU CPIO"
 .SH NAME
 cpio \- copy files to and from archives
 .SH SYNOPSIS
@@ -157,7 +157,7 @@ The old (POSIX.1) portable format. (8589934591 bytes)
 .TP
 .B newc
 The new (SVR4) portable format, which supports file systems
-having more than 65536 i-nodes. (4294967295 bytes)
+having more than 65536 inodes. (4294967295 bytes)
 .TP
 .B crc
 The new (SVR4) portable format with a checksum added.
@@ -204,7 +204,7 @@ Verbosely list the files processed.
 Print a "\fB.\fR" for each file processed.
 .TP
 \fB\-W\fR, \fB\-\-warning=\fIFLAG\fR
-Controlsи warning display.  The \fIFLAG\fR is one of
+Controls what warnings are displayed.  The \fIFLAG\fR is one of
 .BR none ,
 to disable all warnings,
 .BR all
@@ -275,7 +275,7 @@ Use \fIARCHIVE-NAME\fR instead of standard output. Optional \fIUSER\fR and
 \fIHOST\fR specify the user and host names in case of a remote
 archive.
 
-The output archive name can be specified wither using this option, or
+The output archive name can be specified either using this option, or
 using \fB\-F\fR (\fB\-\-file\fR), but not both.
 .TP
 .B \-\-renumber\-inodes
