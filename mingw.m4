@@ -1,6 +1,6 @@
 /* System dependent functions for GNU cpio.
 
-   Copyright (C) 2007, 2010, 2014-2015, 2017, 2020 Free Software
+   Copyright (C) 2007, 2010, 2014-2015, 2017, 2020-2021 Free Software
    Foundation, Inc.
 
    GNU cpio is free software; you can redistribute it and/or modify

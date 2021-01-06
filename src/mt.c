@@ -1,6 +1,6 @@
 /* mt -- control magnetic tape drive operation
    Copyright (C) 1991-1992, 1995, 2001, 2007, 2010, 2014-2015, 2017,
-   2020 Free Software Foundation, Inc.
+   2020-2021 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

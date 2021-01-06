@@ -1,6 +1,6 @@
 /* util.c - Several utility routines for cpio.
    Copyright (C) 1990-1992, 2001, 2004, 2006-2007, 2010-2011, 2014-2015,
-   2017, 2020 Free Software Foundation, Inc.
+   2017, 2020-2021 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

@@ -1,5 +1,5 @@
 /* makepath.c -- Ensure that a directory path exists.
-   Copyright (C) 1990, 2006-2007, 2010, 2014-2015, 2017, 2020 Free
+   Copyright (C) 1990, 2006-2007, 2010, 2014-2015, 2017, 2020-2021 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
