@@ -758,8 +758,9 @@ long_format (struct cpio_file_stat *file_hdr, char const *link_name)
 
   if ((file_hdr->c_mode & CP_IFMT) == CP_IFCHR
       || (file_hdr->c_mode & CP_IFMT) == CP_IFBLK)
-    printf ("%3lu, %3lu ", file_hdr->c_rdev_maj,
-	    file_hdr->c_rdev_min);
+    printf ("%3lu, %3lu ",
+	    (unsigned long) file_hdr->c_rdev_maj,
+	    (unsigned long) file_hdr->c_rdev_min);
   else
     printf ("%8"PRIuMAX" ", (uintmax_t) file_hdr->c_filesize);
 
