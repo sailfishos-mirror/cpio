@@ -30,11 +30,17 @@ endif
 EXTRA_DIST = gendocs.sh gendocs_template mt.1 rmt.8
 
 GENDOCS=$(srcdir)/gendocs.sh
+TEXI2DVI=texi2dvi -E
 
 # Make sure you set TEXINPUT 
 manual:
 	rm -rf manual
 	TEXINPUTS=$(srcdir):$(top_srcdir)/scripts:$$TEXINPUTS \
 	  MAKEINFO="$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS)" \
-	  TEXI2DVI="texi2dvi -t @finalout" \
-	  $(GENDOCS) --no-copy-images $(PACKAGE) '$(PACKAGE_NAME) manual'
+	  TEXI2DVI="texi2dvi -t '@set DISTRIB' -t @finalout" \
+	  $(GENDOCS) --texi2html $(PACKAGE) '$(PACKAGE_NAME) manual'
+
+manual-rebuild: clean-local manual
+
+clean-local:
+	rm -rf manual

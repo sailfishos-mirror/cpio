@@ -1212,7 +1212,6 @@ swab_array (char *ptr, int count)
 void
 process_copy_in ()
 {
-  char done = false;		/* True if trailer reached.  */
   FILE *tty_in = NULL;		/* Interactive file for rename option.  */
   FILE *tty_out = NULL;		/* Interactive file for rename option.  */
   FILE *rename_in = NULL;	/* Batch file for rename option.  */
@@ -1284,7 +1283,7 @@ process_copy_in ()
   change_dir ();
   
   /* While there is more input in the collection, process the input.  */
-  while (!done)
+  while (1)
     {
       swapping_halfwords = swapping_bytes = false;
 
@@ -1318,10 +1317,7 @@ process_copy_in ()
 	{
 	  /* Is this the header for the TRAILER file?  */
 	  if (strcmp (CPIO_TRAILER_NAME, file_hdr.c_name) == 0)
-	    {
-	      done = true;
-	      break;
-	    }
+	    break;
 
 	  cpio_safer_name_suffix (file_hdr.c_name, false, !no_abs_paths_flag,
 				  false);
