@@ -594,9 +594,10 @@ assign_string (char **pvar, char *value)
    The format of the header depends on the compatibility (-c) flag.  */
 
 void
-process_copy_out ()
+process_copy_out (void)
 {
-  dynamic_string input_name;	/* Name of file read from stdin.  */
+  dynamic_string input_name = DYNAMIC_STRING_INITIALIZER;
+                                /* Name of file read from stdin.  */
   struct stat file_stat;	/* Stat record for file.  */
   struct cpio_file_stat file_hdr = CPIO_FILE_STAT_INITIALIZER;
                                 /* Output header information.  */
@@ -605,7 +606,6 @@ process_copy_out ()
   char *orig_file_name = NULL;
 
   /* Initialize the copy out.  */
-  ds_init (&input_name, 128);
   file_hdr.c_magic = 070707;
 
   /* Check whether the output file might be a tape.  */
@@ -657,14 +657,9 @@ process_copy_out ()
 	    {
 	      if (file_hdr.c_mode & CP_IFDIR)
 		{
-		  int len = strlen (input_name.ds_string);
 		  /* Make sure the name ends with a slash */
-		  if (input_name.ds_string[len-1] != '/')
-		    {
-		      ds_resize (&input_name, len + 2);
-		      input_name.ds_string[len] = '/';
-		      input_name.ds_string[len+1] = 0;
-		    }
+		  if (!ds_endswith (&input_name, '/'))
+		    ds_append (&input_name, '/');
 		}
 	    }
 	  
@@ -875,6 +870,7 @@ process_copy_out ()
 			 (unsigned long) blocks), (unsigned long) blocks);
     }
   cpio_file_stat_free (&file_hdr);
+  ds_free (&input_name);
 }
 
 

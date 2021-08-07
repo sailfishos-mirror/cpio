@@ -17,10 +17,6 @@
    Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301 USA.  */
 
-#ifndef NULL
-#define NULL 0
-#endif
-
 /* A dynamic string consists of record that records the size of an
    allocated string and the pointer to that string.  The actual string
    is a normal zero byte terminated string that can be used with the
@@ -30,22 +26,25 @@
 
 typedef struct
 {
-  int ds_length;		/* Actual amount of storage allocated.  */
-  char *ds_string;		/* String.  */
+  size_t ds_size;   /* Actual amount of storage allocated.  */
+  size_t ds_idx;    /* Index of the next free byte in the string. */
+  char *ds_string;  /* String storage. */
 } dynamic_string;
 
+#define DYNAMIC_STRING_INITIALIZER { 0, 0, NULL }
 
-/* Macros that look similar to the original string functions.
-   WARNING:  These macros work only on pointers to dynamic string records.
-   If used with a real record, an "&" must be used to get the pointer.  */
-#define ds_strlen(s)		strlen ((s)->ds_string)
-#define ds_strcmp(s1, s2)	strcmp ((s1)->ds_string, (s2)->ds_string)
-#define ds_strncmp(s1, s2, n)	strncmp ((s1)->ds_string, (s2)->ds_string, n)
-#define ds_index(s, c)		index ((s)->ds_string, c)
-#define ds_rindex(s, c)		rindex ((s)->ds_string, c)
+void ds_init (dynamic_string *string);
+void ds_free (dynamic_string *string);
+void ds_reset (dynamic_string *s, size_t len);
 
-void ds_init (dynamic_string *string, int size);
-void ds_resize (dynamic_string *string, int size);
+/* All functions below guarantee that s->ds_string[s->ds_idx] == '\0' */
 char *ds_fgetname (FILE *f, dynamic_string *s);
 char *ds_fgets (FILE *f, dynamic_string *s);
 char *ds_fgetstr (FILE *f, dynamic_string *s, char eos);
+void ds_append (dynamic_string *s, int c);
+void ds_concat (dynamic_string *s, char const *str);
+
+#define ds_len(s) ((s)->ds_idx)
+
+int ds_endswith (dynamic_string *s, int c);
+

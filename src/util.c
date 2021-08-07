@@ -846,10 +846,8 @@ get_next_reel (int tape_des)
   FILE *tty_out;		/* File for interacting with user.  */
   int old_tape_des;
   char *next_archive_name;
-  dynamic_string new_name;
+  dynamic_string new_name = DYNAMIC_STRING_INITIALIZER;
   char *str_res;
-
-  ds_init (&new_name, 128);
 
   /* Open files for interactive communication.  */
   tty_in = fopen (TTY_NAME, "r");
@@ -925,7 +923,7 @@ get_next_reel (int tape_des)
     error (PAXEXIT_FAILURE, 0, _("internal error: tape descriptor changed from %d to %d"),
 	   old_tape_des, tape_des);
 
-  free (new_name.ds_string);
+  ds_free (&new_name);
   fclose (tty_in);
   fclose (tty_out);
 }

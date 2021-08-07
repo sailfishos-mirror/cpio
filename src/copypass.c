@@ -48,10 +48,12 @@ set_copypass_perms (int fd, const char *name, struct stat *st)
    If `link_flag', link instead of copying.  */
 
 void
-process_copy_pass ()
+process_copy_pass (void)
 {
-  dynamic_string input_name;	/* Name of file from stdin.  */
-  dynamic_string output_name;	/* Name of new file.  */
+  dynamic_string input_name = DYNAMIC_STRING_INITIALIZER;
+                                /* Name of file from stdin.  */
+  dynamic_string output_name = DYNAMIC_STRING_INITIALIZER;
+                                /* Name of new file.  */
   size_t dirname_len;		/* Length of `directory_name'.  */
   int res;			/* Result of functions.  */
   char *slash;			/* For moving past slashes in input name.  */
@@ -65,25 +67,18 @@ process_copy_pass ()
 				   created files  */
 
   /* Initialize the copy pass.  */
-  ds_init (&input_name, 128);
   
   dirname_len = strlen (directory_name);
   if (change_directory_option && !ISSLASH (directory_name[0]))
     {
       char *pwd = xgetcwd ();
-
-      dirname_len += strlen (pwd) + 1;
-      ds_init (&output_name, dirname_len + 2);
-      strcpy (output_name.ds_string, pwd);
-      strcat (output_name.ds_string, "/");
-      strcat (output_name.ds_string, directory_name);
+      
+      ds_concat (&output_name, pwd);
+      ds_append (&output_name, '/');
     }
-  else
-    {
-      ds_init (&output_name, dirname_len + 2);
-      strcpy (output_name.ds_string, directory_name);
-    }
-  output_name.ds_string[dirname_len] = '/';
+  ds_concat (&output_name, directory_name);
+  ds_append (&output_name, '/');
+  dirname_len = ds_len (&output_name);
   output_is_seekable = true;
 
   change_dir ();
@@ -116,8 +111,8 @@ process_copy_pass ()
       /* Make the name of the new file.  */
       for (slash = input_name.ds_string; *slash == '/'; ++slash)
 	;
-      ds_resize (&output_name, dirname_len + strlen (slash) + 2);
-      strcpy (output_name.ds_string + dirname_len + 1, slash);
+      ds_reset (&output_name, dirname_len);
+      ds_concat (&output_name, slash);
 
       existing_dir = false;
       if (lstat (output_name.ds_string, &out_file_stat) == 0)
@@ -333,6 +328,9 @@ process_copy_pass ()
 			 (unsigned long) blocks),
 	       (unsigned long) blocks);
     }
+
+  ds_free (&input_name);
+  ds_free (&output_name);
 }
 
 /* Try and create a hard link from FILE_NAME to another file 

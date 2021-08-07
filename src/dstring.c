@@ -20,8 +20,8 @@
 #if defined(HAVE_CONFIG_H)
 # include <config.h>
 #endif
-
 #include <stdio.h>
+#include <stdlib.h>
 #if defined(HAVE_STRING_H) || defined(STDC_HEADERS)
 #include <string.h>
 #else
@@ -33,22 +33,39 @@
 /* Initialiaze dynamic string STRING with space for SIZE characters.  */
 
 void
-ds_init (dynamic_string *string, int size)
+ds_init (dynamic_string *string)
 {
-  string->ds_length = size;
-  string->ds_string = (char *) xmalloc (size);
+  memset (string, 0, sizeof *string);
 }
 
-/* Expand dynamic string STRING, if necessary, to hold SIZE characters.  */
+/* Free the dynamic string storage. */
 
 void
-ds_resize (dynamic_string *string, int size)
+ds_free (dynamic_string *string)
 {
-  if (size > string->ds_length)
+  free (string->ds_string);
+}
+
+/* Expand dynamic string STRING, if necessary.  */
+
+void
+ds_resize (dynamic_string *string)
+{
+  if (string->ds_idx == string->ds_size)
     {
-      string->ds_length = size;
-      string->ds_string = (char *) xrealloc ((char *) string->ds_string, size);
+      string->ds_string = x2nrealloc (string->ds_string, &string->ds_size,
+				      1);
     }
+}
+
+/* Reset the index of the dynamic string S to LEN. */
+
+void
+ds_reset (dynamic_string *s, size_t len)
+{
+  while (len > s->ds_size)
+    ds_resize (s);
+  s->ds_idx = len;
 }
 
 /* Dynamic string S gets a string terminated by the EOS character
@@ -61,32 +78,48 @@ ds_resize (dynamic_string *string, int size)
 char *
 ds_fgetstr (FILE *f, dynamic_string *s, char eos)
 {
-  int insize;			/* Amount needed for line.  */
-  int strsize;			/* Amount allocated for S.  */
   int next_ch;
 
   /* Initialize.  */
-  insize = 0;
-  strsize = s->ds_length;
+  s->ds_idx = 0;
 
   /* Read the input string.  */
-  next_ch = getc (f);
-  while (next_ch != eos && next_ch != EOF)
+  while ((next_ch = getc (f)) != eos && next_ch != EOF)
     {
-      if (insize >= strsize - 1)
-	{
-	  ds_resize (s, strsize * 2 + 2);
-	  strsize = s->ds_length;
-	}
-      s->ds_string[insize++] = next_ch;
-      next_ch = getc (f);
+      ds_resize (s);
+      s->ds_string[s->ds_idx++] = next_ch;
     }
-  s->ds_string[insize++] = '\0';
+  ds_resize (s);
+  s->ds_string[s->ds_idx] = '\0';
 
-  if (insize == 1 && next_ch == EOF)
+  if (s->ds_idx == 0 && next_ch == EOF)
     return NULL;
   else
     return s->ds_string;
+}
+
+void
+ds_append (dynamic_string *s, int c)
+{
+  ds_resize (s);
+  s->ds_string[s->ds_idx] = c;
+  if (c)
+    {
+      s->ds_idx++;
+      ds_resize (s);
+      s->ds_string[s->ds_idx] = 0;
+    }      
+}
+
+void
+ds_concat (dynamic_string *s, char const *str)
+{
+  size_t len = strlen (str);
+  while (len + 1 > s->ds_size)
+    ds_resize (s);
+  memcpy (s->ds_string + s->ds_idx, str, len);
+  s->ds_idx += len;
+  s->ds_string[s->ds_idx] = 0;
 }
 
 char *
@@ -99,4 +132,11 @@ char *
 ds_fgetname (FILE *f, dynamic_string *s)
 {
   return ds_fgetstr (f, s, '\0');
+}
+
+/* Return true if the dynamic string S ends with character C. */
+int
+ds_endswith (dynamic_string *s, int c)
+{
+  return (s->ds_idx > 0 && s->ds_string[s->ds_idx - 1] == c);
 }

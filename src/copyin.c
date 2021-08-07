@@ -55,11 +55,12 @@ query_rename(struct cpio_file_stat* file_hdr, FILE *tty_in, FILE *tty_out,
   char *str_res;		/* Result for string function.  */
   static dynamic_string new_name;	/* New file name for rename option.  */
   static int initialized_new_name = false;
+
   if (!initialized_new_name)
-  {
-    ds_init (&new_name, 128);
-    initialized_new_name = true;
-  }
+    {
+      ds_init (&new_name);
+      initialized_new_name = true;
+    }
 
   if (rename_flag)
     {
@@ -780,37 +781,36 @@ long_format (struct cpio_file_stat *file_hdr, char const *link_name)
    already in `save_patterns' (from the command line) are preserved.  */
 
 static void
-read_pattern_file ()
+read_pattern_file (void)
 {
-  int max_new_patterns;
-  char **new_save_patterns;
-  int new_num_patterns;
+  char **new_save_patterns = NULL;
+  size_t max_new_patterns;
+  size_t new_num_patterns;
   int i;
-  dynamic_string pattern_name;
+  dynamic_string pattern_name = DYNAMIC_STRING_INITIALIZER;
   FILE *pattern_fp;
 
   if (num_patterns < 0)
     num_patterns = 0;
-  max_new_patterns = 1 + num_patterns;
-  new_save_patterns = (char **) xmalloc (max_new_patterns * sizeof (char *));
   new_num_patterns = num_patterns;
-  ds_init (&pattern_name, 128);
+  max_new_patterns = num_patterns;
+  new_save_patterns = xcalloc (max_new_patterns, sizeof (new_save_patterns[0]));
 
   pattern_fp = fopen (pattern_file_name, "r");
   if (pattern_fp == NULL)
     open_fatal (pattern_file_name);
   while (ds_fgetstr (pattern_fp, &pattern_name, '\n') != NULL)
     {
-      if (new_num_patterns >= max_new_patterns)
-	{
-	  max_new_patterns += 1;
-	  new_save_patterns = (char **)
-	    xrealloc ((char *) new_save_patterns,
-		      max_new_patterns * sizeof (char *));
-	}
+      if (new_num_patterns == max_new_patterns)
+	new_save_patterns = x2nrealloc (new_save_patterns,
+					&max_new_patterns,
+					sizeof (new_save_patterns[0]));
       new_save_patterns[new_num_patterns] = xstrdup (pattern_name.ds_string);
       ++new_num_patterns;
     }
+
+  ds_free (&pattern_name);
+  
   if (ferror (pattern_fp) || fclose (pattern_fp) == EOF)
     close_error (pattern_file_name);
 
@@ -1210,7 +1210,7 @@ swab_array (char *ptr, int count)
    in the file system.  */
 
 void
-process_copy_in ()
+process_copy_in (void)
 {
   FILE *tty_in = NULL;		/* Interactive file for rename option.  */
   FILE *tty_out = NULL;		/* Interactive file for rename option.  */
