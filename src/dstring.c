@@ -64,7 +64,7 @@ void
 ds_reset (dynamic_string *s, size_t len)
 {
   while (len > s->ds_size)
-    ds_resize (s);
+    s->ds_string = x2nrealloc (s->ds_string, &s->ds_size, 1);
   s->ds_idx = len;
 }
 
@@ -116,7 +116,7 @@ ds_concat (dynamic_string *s, char const *str)
 {
   size_t len = strlen (str);
   while (len + 1 > s->ds_size)
-    ds_resize (s);
+    s->ds_string = x2nrealloc (s->ds_string, &s->ds_size, 1);
   memcpy (s->ds_string + s->ds_idx, str, len);
   s->ds_idx += len;
   s->ds_string[s->ds_idx] = 0;
