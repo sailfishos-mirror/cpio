@@ -34,6 +34,7 @@
 #endif
 
 #include <unistd.h>
+#include <inttostr.h>
 
 struct userid
 {
@@ -59,7 +60,6 @@ getuser (uid_t uid)
 {
   register struct userid *tail;
   struct passwd *pwent;
-  char usernum_string[20];
 
   for (tail = user_alist; tail; tail = tail->next)
     if (tail->id.u == uid)
@@ -70,8 +70,8 @@ getuser (uid_t uid)
   tail->id.u = uid;
   if (pwent == 0)
     {
-      sprintf (usernum_string, "%u", (unsigned) uid);
-      tail->name = xstrdup (usernum_string);
+      char nbuf[UINTMAX_STRSIZE_BOUND];
+      tail->name = xstrdup (umaxtostr (uid, nbuf));
     }
   else
     tail->name = xstrdup (pwent->pw_name);
@@ -134,7 +134,6 @@ getgroup (gid_t gid)
 {
   register struct userid *tail;
   struct group *grent;
-  char groupnum_string[20];
 
   for (tail = group_alist; tail; tail = tail->next)
     if (tail->id.g == gid)
@@ -145,8 +144,8 @@ getgroup (gid_t gid)
   tail->id.g = gid;
   if (grent == 0)
     {
-      sprintf (groupnum_string, "%u", (unsigned int) gid);
-      tail->name = xstrdup (groupnum_string);
+      char nbuf[UINTMAX_STRSIZE_BOUND];
+      tail->name = xstrdup (umaxtostr (gid, nbuf));
     }
   else
     tail->name = xstrdup (grent->gr_name);

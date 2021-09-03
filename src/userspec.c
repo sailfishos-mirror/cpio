@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <inttostr.h>
 
 #ifndef HAVE_ENDPWENT
 # define endpwent()
@@ -141,12 +142,8 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	      grp = getgrgid (pwd->pw_gid);
 	      if (grp == NULL)
 		{
-		  /* This is enough room to hold the unsigned decimal
-		     representation of any 32-bit quantity and the trailing
-		     zero byte.  */
-		  char uint_buf[21];
-		  sprintf (uint_buf, "%u", (unsigned) (pwd->pw_gid));
-		  V_STRDUP (groupname, uint_buf);
+		  char nbuf[UINTMAX_STRSIZE_BOUND];
+		  V_STRDUP (groupname, umaxtostr (pwd->pw_gid, nbuf));
 		}
 	      else
 		{
