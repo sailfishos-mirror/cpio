@@ -79,8 +79,7 @@ tape_empty_output_buffer (int out_des)
 
       if (output_is_special
 	  && (bytes_written >= 0
-	      || (bytes_written < 0
-		  && (errno == ENOSPC || errno == EIO || errno == ENXIO))))
+	      || (errno == ENOSPC || errno == EIO || errno == ENXIO)))
 	{
 	  get_next_reel (out_des);
 	  if (bytes_written > 0)
