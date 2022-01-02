@@ -1,6 +1,6 @@
 /* idcache.c -- map user and group IDs, cached for speed
    Copyright (C) 1985, 1988-1990, 2004, 2007, 2010, 2014-2015, 2017,
-   2020-2021 Free Software Foundation, Inc.
+   2020-2022 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
