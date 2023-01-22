@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl This file is part of GNU cpio
-dnl Copyright (C) 2003-2022 Free Software Foundation, Inc.
+dnl Copyright (C) 2003-2023 Free Software Foundation, Inc.
 dnl
 dnl This program is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
