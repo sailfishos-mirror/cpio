@@ -19,6 +19,7 @@
 #include "paxlib.h"
 #include "quotearg.h"
 #include "quote.h"
+#include "inttostr.h"
 
 enum archive_format
 {
@@ -98,6 +99,10 @@ extern char output_is_seekable;
 extern int (*xstat) ();
 extern void (*copy_function) ();
 extern char *change_directory_option;
+
+#define STRINGIFY_BIGINT(i, b) umaxtostr (i, b)
+enum { UINTMAX_STRSIZE_BOUND = INT_BUFSIZE_BOUND (intmax_t) };
+
 
 
 /* copyin.c */
@@ -155,8 +160,8 @@ int is_tar_header (char *buf);
 int is_tar_filename_too_long (char *name);
 
 /* userspec.c */
-char *parse_user_spec (char *name, uid_t *uid, gid_t *gid,
-		       char **username, char **groupname);
+const char *parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
+			     char **username_arg, char **groupname_arg);
 
 /* util.c */
 void tape_empty_output_buffer (int out_des);

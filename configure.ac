@@ -20,7 +20,7 @@ AC_INIT([GNU cpio], [2.13.90], [bug-cpio@gnu.org],,
 AC_CONFIG_SRCDIR(src/cpio.h)
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
-AC_PREREQ([2.64])
+AC_PREREQ([2.71])
 AM_INIT_AUTOMAKE([1.15 gnits tar-ustar dist-bzip2 std-options silent-rules])
 
 # Enable silent rules by default:
@@ -37,16 +37,14 @@ gl_EARLY
 AC_C_PROTOTYPES
 
 AC_SYS_LARGEFILE
-
-AC_TYPE_SIGNAL
 AC_HEADER_MAJOR
 AC_C_CONST
 AC_TYPE_UID_T
 AC_CHECK_TYPE(gid_t, int)
-AC_HEADER_STDC
+
 AC_HEADER_DIRENT
-AC_COMPILE_CHECK_RETTYPE([major], [0])
-AC_COMPILE_CHECK_RETTYPE([minor], [0])
+AX_COMPILE_CHECK_RETTYPE([major],[0])
+AX_COMPILE_CHECK_RETTYPE([minor],[0])
 
 AC_CHECK_FUNCS([fchmod fchown])
 # This is needed for mingw build
@@ -63,7 +61,7 @@ CPIO_PACKED_STRUCTS
 CPIO_DEFAULT_QUOTING_STYLE(escape)
 
 AC_ARG_ENABLE(mt,
- AC_HELP_STRING([--enable-mt], [Enable building of mt program]))
+ AS_HELP_STRING([--enable-mt],[Enable building of mt program]))
 
 AM_CONDITIONAL([CPIO_MT_COND], [test "$enable_mt" = yes])
 

@@ -485,7 +485,8 @@ crc newc odc bin ustar tar (all-caps also recognized)"), arg));
 		      _("--owner cannot be used with --no-preserve-owner")));
       else
 	{
-	  char *e, *u, *g;
+	  char const *e;
+	  char *u, *g;
 	  
 	  e = parse_user_spec (arg, &set_owner, &set_group, &u, &g);
 	  if (e)

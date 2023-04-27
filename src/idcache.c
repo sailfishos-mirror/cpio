@@ -33,7 +33,8 @@
 #endif
 
 #include <unistd.h>
-#include <inttostr.h>
+#include "cpiohdr.h"
+#include "extern.h"
 
 struct userid
 {

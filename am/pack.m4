@@ -1,5 +1,5 @@
 # This file is part of GNU cpio
-# Copyright (C) 2009 Free Software Foundation
+# Copyright (C) 2009-2023 Free Software Foundation
 #
 # GNU cpio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,21 +19,22 @@ AC_DEFUN([CPIO_PACKED_STRUCTS],[
   dnl check for __attribute__((packed))
   AC_MSG_CHECKING([for structure packing via __attribute__((packed))])
   AC_CACHE_VAL(cpio_cv_have_attrib_packed,[
-    AC_TRY_COMPILE(,
-      [struct { int i __attribute__((packed)); } s; ],
-      [have_attrib_packed=yes],
-      [have_attrib_packed=no])
+    AC_COMPILE_IFELSE(
+            [AC_LANG_PROGRAM([],
+               [[struct { int i __attribute__((packed)); } s;]])],
+            [have_attrib_packed=yes],
+            [have_attrib_packed=no])
     ])
   AC_MSG_RESULT($have_attrib_packed)
 
   if test "$have_attrib_packed" = no; then
     AC_MSG_CHECKING(for structure packing via pragma)
     AC_CACHE_VAL(cpio_cv_have_pragma_pack,[
-      AC_TRY_RUN(CPIO_FLUSHLEFT([
-                 int main(int argc, char **argv) {
+      AC_RUN_IFELSE(
+            [AC_LANG_SOURCE([[int main(int argc, char **argv) {
                  #pragma pack(1)               
                     struct { char c; long l; } s;
-                    return sizeof(s)==sizeof(s.c)+sizeof(s.l) ? 0:1; } ]),
+                    return sizeof(s)==sizeof(s.c)+sizeof(s.l) ? 0:1; }]])],
                  [have_pragma_pack=yes],
                  [have_pragma_pack=no])
       ])
@@ -43,12 +44,12 @@ AC_DEFUN([CPIO_PACKED_STRUCTS],[
     else
       AC_MSG_CHECKING(for structure packing via hppa/hp-ux pragma)
       AC_CACHE_VAL(cpio_cv_have_pragma_pack_hpux,[
-        AC_TRY_RUN(CPIO_FLUSHLEFT([
-                   /* hppa/hp-ux wants pragma outside of function */
+        AC_RUN_IFELSE(
+            [AC_LANG_SOURCE([[/* hppa/hp-ux wants pragma outside of function */
                    #pragma pack 1
                    struct { char c; long l; } s;
                    int main(int argc, char **argv) {
-                      return sizeof(s)==sizeof(s.c)+sizeof(s.l) ? 0:1; } ]),
+                      return sizeof(s)==sizeof(s.c)+sizeof(s.l) ? 0:1; } ]])],
                    [have_pragma_pack_hpux=yes],
                    [have_pragma_pack_hpux=no])
         ])

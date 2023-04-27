@@ -23,7 +23,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
-#include <inttostr.h>
+#include "cpiohdr.h"
+#include "extern.h"
 
 #ifndef HAVE_ENDPWENT
 # define endpwent()
