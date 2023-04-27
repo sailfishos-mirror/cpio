@@ -21,7 +21,7 @@ AC_CONFIG_SRCDIR(src/cpio.h)
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
 AC_PREREQ([2.71])
-AM_INIT_AUTOMAKE([1.15 gnits tar-ustar dist-bzip2 std-options silent-rules])
+AM_INIT_AUTOMAKE([1.16.5 gnits tar-ustar dist-bzip2 std-options silent-rules])
 
 # Enable silent rules by default:
 AM_SILENT_RULES([yes])
@@ -43,8 +43,8 @@ AC_TYPE_UID_T
 AC_CHECK_TYPE(gid_t, int)
 
 AC_HEADER_DIRENT
-AX_COMPILE_CHECK_RETTYPE([major],[0])
-AX_COMPILE_CHECK_RETTYPE([minor],[0])
+AX_COMPILE_CHECK_RETTYPE([major], [0])
+AX_COMPILE_CHECK_RETTYPE([minor], [0])
 
 AC_CHECK_FUNCS([fchmod fchown])
 # This is needed for mingw build
