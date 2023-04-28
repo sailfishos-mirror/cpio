@@ -623,14 +623,14 @@ process_copy_out (void)
 	S_ISCHR (file_stat.st_mode);
       output_is_seekable = S_ISREG (file_stat.st_mode);
     }
-
-  change_dir ();
   
   if (append_flag)
     {
       process_copy_in ();
       prepare_append (out_file_des);
     }
+  else
+    change_dir ();
 
   /* Copy files with names read from stdin.  */
   while (ds_fgetstr (stdin, &input_name, name_end) != NULL)
