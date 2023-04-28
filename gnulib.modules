@@ -12,6 +12,7 @@ fnmatch-gnu
 full-write
 getline
 gettext-h
+gettime
 gitlog-to-changelog
 hash
 inttostr
@@ -24,6 +25,7 @@ stdbool
 stdint
 stpcpy
 strerror
+timespec
 unlocked-io
 utimens
 xalloc

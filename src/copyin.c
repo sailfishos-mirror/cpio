@@ -35,6 +35,7 @@
 #ifndef HAVE_LCHOWN
 # define lchown(f,u,g) 0
 #endif
+#include <timespec.h>
 
 static void copyin_regular_file(struct cpio_file_stat* file_hdr,
 				int in_file_des);
@@ -846,7 +847,7 @@ copyin_file (struct cpio_file_stat *file_hdr, int in_file_des)
 
 
 /* Current time for verbose table.  */
-static time_t current_time;
+static struct timespec current_time;
 
 
 /* Print the file described by FILE_HDR in long format.
@@ -859,7 +860,14 @@ long_format (struct cpio_file_stat *file_hdr, char const *link_name)
   char mbuf[11];
   time_t when;
   char *tbuf;
-  enum { six_months = 6 * 30 * 24 * 60 * 60 };
+  struct timespec when_timespec;
+  /* A Gregorian year has 365.2425 * 24 * 60 * 60 == 31556952 seconds
+     on the average.  Write this value as an integer constant to
+     avoid floating point hassles. */
+  struct timespec six_months_ago = {
+    .tv_sec = current_time.tv_sec - 31556952 / 2,
+    .tv_nsec = current_time.tv_nsec
+  };
 
   mode_string (file_hdr->c_mode, mbuf);
   mbuf[10] = '\0';
@@ -882,13 +890,24 @@ long_format (struct cpio_file_stat *file_hdr, char const *link_name)
   else
     printf ("%8ju ", (uintmax_t) file_hdr->c_filesize);
 
+  when = file_hdr->c_mtime;
+  when_timespec.tv_sec = when;
+  when_timespec.tv_nsec = 0;
+
   /* Get time values ready to print.  Do not worry about ctime failing,
      or a year outside the range 1000-9999, since 0 <= WHEN < 2**33.  */
-  when = file_hdr->c_mtime;
   tbuf = ctime (&when);
 
-  if (!((current_time < six_months || current_time - six_months <= when)
-	&& when <= current_time))
+  /* If the file appears to be in the future, update the current
+     time, in case the file happens to have been modified since
+     the last time we checked the clock.  */
+  if (timespec_cmp (current_time, when_timespec) < 0)
+    current_time = current_timespec ();
+
+  /* Consider a time to be recent if it is within the past six months.
+     Use the same algorithm that GNU 'ls' does, for consistency. */
+  if (!(timespec_cmp (six_months_ago, when_timespec) < 0
+	&& timespec_cmp (when_timespec, current_time) < 0))
     {
       /* The file is older than 6 months, or in the future.
 	 Show the year instead of the time of day.  */
@@ -1387,9 +1406,7 @@ process_copy_in (void)
 
   /* Get date and time if needed for processing the table option.  */
   if (table_flag && verbose_flag)
-    {
-      time (&current_time);
-    }
+    current_time = current_timespec ();
 
   /* Check whether the input file might be a tape.  */
   in_file_des = archive_des;
