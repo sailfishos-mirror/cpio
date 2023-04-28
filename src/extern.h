@@ -68,7 +68,7 @@ extern int ignore_dirnlink_option;
 
 extern bool to_stdout_option;
 
-extern int last_header_start;
+extern off_t last_header_start;
 extern int copy_matching_files;
 extern int numeric_uid;
 extern char *pattern_file_name;
@@ -128,7 +128,7 @@ void field_width_error (const char *filename, const char *fieldname,
 
 /* copypass.c */
 void process_copy_pass (void);
-int link_to_maj_min_ino (char *file_name, int st_dev_maj, 
+int link_to_maj_min_ino (char *file_name, int st_dev_maj,
 			 int st_dev_min, ino_t st_ino);
 int link_to_name (char const *link_name, char const *link_target);
 
@@ -176,7 +176,7 @@ void copy_files_tape_to_disk (int in_des, int out_des, off_t num_bytes);
 void copy_files_disk_to_tape (int in_des, int out_des, off_t num_bytes, char *filename);
 void copy_files_disk_to_disk (int in_des, int out_des, off_t num_bytes, char *filename);
 void warn_if_file_changed (char *file_name, off_t old_file_size,
-                           time_t old_file_mtime);
+			   time_t old_file_mtime);
 void create_all_directories (char const *name);
 void prepare_append (int out_file_des);
 char *find_inode_file (ino_t node_num,
@@ -190,7 +190,7 @@ void set_new_media_message (char *message);
 #ifdef HPUX_CDF
 char *add_cdf_double_slashes (char *filename);
 #endif
-void write_nuls_to_file (off_t num_bytes, int out_des, 
+void write_nuls_to_file (off_t num_bytes, int out_des,
 			 void (*writer) (char *in_buf,
 					 int out_des, off_t num_bytes));
 #define DISK_IO_BLOCK_SIZE	512
@@ -234,6 +234,5 @@ void delay_set_stat (char const *file_name, struct stat *st,
 		     mode_t invert_permissions);
 int repair_delayed_set_stat (struct cpio_file_stat *file_hdr);
 void apply_delayed_set_stat (void);
-     
-int arf_stores_inode_p (enum archive_format arf);
 
+int arf_stores_inode_p (enum archive_format arf);

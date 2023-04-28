@@ -113,7 +113,7 @@ int debug_flag = false;
 
 /* File position of last header read.  Only used during -A to determine
    where the old TRAILER!!! record started.  */
-int last_header_start = 0;
+off_t last_header_start = 0;
 
 /* With -i; if true, copy only files that match any of the given patterns;
    if false, copy only files that do not match any of the patterns. (-f) */
