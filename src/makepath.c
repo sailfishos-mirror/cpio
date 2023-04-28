@@ -94,7 +94,7 @@ make_path (char const *argpath,
 			stats.st_uid = owner;
 		      if (group != -1)
 			stats.st_gid = group;
-		      
+
 		      delay_set_stat (dirpath, &stats, invert_permissions);
 		    }
 		}
@@ -118,7 +118,7 @@ make_path (char const *argpath,
 
       if (mkdir (dirpath, tmpmode ^ invert_permissions))
 	{
-	  /* In some cases, if the final component in dirpath was `.' then we 
+	  /* In some cases, if the final component in dirpath was `.' then we
 	     just got an EEXIST error from that last mkdir().  If that's
 	     the case, ignore it.  */
 	  if ( (errno != EEXIST) ||
@@ -137,10 +137,10 @@ make_path (char const *argpath,
 	    stats.st_uid = owner;
 	  if (group != -1)
 	    stats.st_gid = group;
-	  
+
 	  delay_set_stat (dirpath, &stats, invert_permissions);
 	}
-	
+
       if (verbose_fmt_string != NULL)
 	error (0, 0, verbose_fmt_string, dirpath);
 

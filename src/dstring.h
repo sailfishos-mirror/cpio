@@ -46,4 +46,3 @@ void ds_concat (dynamic_string *s, char const *str);
 #define ds_len(s) ((s)->ds_idx)
 
 int ds_endswith (dynamic_string *s, int c);
-

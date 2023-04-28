@@ -24,4 +24,3 @@ fatal_exit ()
 {
   exit (PAXEXIT_FAILURE);
 }
-

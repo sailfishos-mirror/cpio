@@ -137,7 +137,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	  if (g == NULL && separator != NULL)
 	    {
 	      /* A separator was given, but a group was not specified,
-	         so get the login group.  */
+		 so get the login group.  */
 	      *gid = pwd->pw_gid;
 	      grp = getgrgid (pwd->pw_gid);
 	      if (grp == NULL)

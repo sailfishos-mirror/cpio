@@ -48,15 +48,15 @@
 enum cpio_options {
   NO_ABSOLUTE_FILENAMES_OPTION=256,
   ABSOLUTE_FILENAMES_OPTION,
-  NO_PRESERVE_OWNER_OPTION,      
-  ONLY_VERIFY_CRC_OPTION,        
-  RENAME_BATCH_FILE_OPTION,      
-  RSH_COMMAND_OPTION,            
-  QUIET_OPTION,                  
-  SPARSE_OPTION,                 
-  FORCE_LOCAL_OPTION,            
-  DEBUG_OPTION,                  
-  BLOCK_SIZE_OPTION,             
+  NO_PRESERVE_OWNER_OPTION,
+  ONLY_VERIFY_CRC_OPTION,
+  RENAME_BATCH_FILE_OPTION,
+  RSH_COMMAND_OPTION,
+  QUIET_OPTION,
+  SPARSE_OPTION,
+  FORCE_LOCAL_OPTION,
+  DEBUG_OPTION,
+  BLOCK_SIZE_OPTION,
   TO_STDOUT_OPTION,
   RENUMBER_INODES_OPTION,
   IGNORE_DEVNO_OPTION,
@@ -72,7 +72,7 @@ const char *program_authors[] =
     "Sergey Poznyakoff",
     NULL
   };
-  
+
 const char *argp_program_bug_address = "<" PACKAGE_BUGREPORT ">";
 static char doc[] = N_("GNU `cpio' copies files to and from archives\n\
 \n\
@@ -106,15 +106,15 @@ static struct argp_option options[] = {
   {"list", 't', 0, 0,
    N_("Print a table of contents of the input"), GRID },
 #undef GRID
-  
+
   /* ********** */
-#define GRID 100  
+#define GRID 100
   {NULL, 0, NULL, 0,
    N_("Operation modifiers valid in any mode:"), GRID },
 
   {"directory", 'D', N_("DIR"), 0,
    N_("Change to directory DIR"), GRID+1 },
-  
+
   {"force-local", FORCE_LOCAL_OPTION, 0, 0,
    N_("Archive file is local, even if its name contains colons"), GRID+1 },
   {"format", 'H', N_("FORMAT"), 0,
@@ -125,7 +125,7 @@ static struct argp_option options[] = {
    N_("Set the I/O block size to BLOCK-SIZE * 512 bytes"), GRID+1 },
   {NULL, 'c', NULL, 0,
    N_("Use the old portable (ASCII) archive format"), GRID+1 },
-  {"dot", 'V', NULL, 0, 
+  {"dot", 'V', NULL, 0,
    N_("Print a \".\" for each file processed"), GRID+1 },
   {"io-size", 'C', N_("NUMBER"), 0,
    N_("Set the I/O block size to the given NUMBER of bytes"), GRID+1 },
@@ -154,9 +154,9 @@ static struct argp_option options[] = {
   {"rsh-command", RSH_COMMAND_OPTION, N_("COMMAND"), 0,
    N_("Use COMMAND instead of rsh"), GRID+1 },
 #undef GRID
-  
+
   /* ********** */
-#define GRID 200  
+#define GRID 200
   {NULL, 0, NULL, 0,
    N_("Operation modifiers valid only in copy-in mode:"), GRID },
   {"nonmatching", 'f', 0, 0,
@@ -183,7 +183,7 @@ static struct argp_option options[] = {
    N_("Extract files to standard output"), GRID+1 },
   {NULL, 'I', N_("[[USER@]HOST:]FILE-NAME"), 0,
    N_("Archive filename to use instead of standard input. Optional USER and HOST specify the user and host names in case of a remote archive"), GRID+1 },
-#undef GRID   
+#undef GRID
 
   /* ********** */
 #define GRID 300
@@ -203,7 +203,7 @@ static struct argp_option options[] = {
    N_("Create device-independent (reproducible) archives") },
   {"reproducible", 0, NULL, OPTION_ALIAS },
 #undef GRID
-  
+
   /* ********** */
 #define GRID 400
   {NULL, 0, NULL, 0,
@@ -212,7 +212,7 @@ static struct argp_option options[] = {
    N_("Link files instead of copying them, when  possible"), GRID+1 },
 
 #undef GRID
-  
+
   /* ********** */
 #define GRID 500
   {NULL, 0, NULL, 0,
@@ -222,7 +222,7 @@ static struct argp_option options[] = {
    GRID+1 },
   {"no-absolute-filenames", NO_ABSOLUTE_FILENAMES_OPTION, 0, 0,
    N_("Create all files relative to the current directory"), GRID+1 },
-#undef GRID  
+#undef GRID
   /* ********** */
 #define GRID 600
   {NULL, 0, NULL, 0,
@@ -234,7 +234,7 @@ static struct argp_option options[] = {
   {"reset-access-time", 'a', NULL, 0,
    N_("Reset the access times of files after reading them"), GRID+1 },
 
-#undef GRID   
+#undef GRID
   /* ********** */
 #define GRID 700
   {NULL, 0, NULL, 0,
@@ -250,7 +250,7 @@ static struct argp_option options[] = {
   {"sparse", SPARSE_OPTION, NULL, 0,
    N_("Write files with large blocks of zeros as sparse files"), GRID+1 },
 #undef GRID
-  
+
   {0, 0, 0, 0}
 };
 
@@ -278,10 +278,10 @@ warn_control (char *arg)
       warn_option = 0;
       return 0;
     }
-  
+
   if (strlen (arg) > 2 && memcmp (arg, "no-", 3) == 0)
     offset = 3;
-      
+
   for (wt = warn_tab; wt->name; wt++)
     if (strcmp (arg + offset, wt->name) == 0)
       {
@@ -351,7 +351,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'D':
       change_directory_option = arg;
       break;
-      
+
     case 'f':		/* Only copy files not matching patterns.  */
       copy_matching_files = false;
       break;
@@ -388,7 +388,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 invalid archive format `%s'; valid formats are:\n\
 crc newc odc bin ustar tar (all-caps also recognized)"), arg));
       break;
-	  
+
     case 'i':		/* Copy-in mode.  */
       if (copy_function != 0)
 	USAGE_ERROR ((0, 0, _("Mode already defined")));
@@ -426,10 +426,10 @@ crc newc odc bin ustar tar (all-caps also recognized)"), arg));
     case ABSOLUTE_FILENAMES_OPTION:		/* --absolute-filenames */
       no_abs_paths_flag = false;
       break;
-      
+
     case NO_PRESERVE_OWNER_OPTION:		/* --no-preserve-owner */
       if (set_owner_flag || set_group_flag)
-	USAGE_ERROR ((0, 0,  
+	USAGE_ERROR ((0, 0,
 		      _("--no-preserve-owner cannot be used with --owner")));
       no_chown_flag = true;
       break;
@@ -457,7 +457,7 @@ crc newc odc bin ustar tar (all-caps also recognized)"), arg));
     case IGNORE_DEVNO_OPTION:
       ignore_devno_option = 1;
       break;
-      
+
     case RENUMBER_INODES_OPTION:
       renumber_inodes_option = 1;
       break;
@@ -465,12 +465,12 @@ crc newc odc bin ustar tar (all-caps also recognized)"), arg));
     case IGNORE_DIRNLINK_OPTION:
       ignore_dirnlink_option = 1;
       break;
-      
+
     case DEVICE_INDEPENDENT_OPTION:
       ignore_devno_option = renumber_inodes_option =
 	ignore_dirnlink_option = 1;
       break;
-      
+
     case RSH_COMMAND_OPTION:
       rsh_command_option = arg;
       break;
@@ -489,13 +489,13 @@ crc newc odc bin ustar tar (all-caps also recognized)"), arg));
 
     case 'R':		/* Set the owner.  */
       if (no_chown_flag)
-	USAGE_ERROR ((0, 0,  
+	USAGE_ERROR ((0, 0,
 		      _("--owner cannot be used with --no-preserve-owner")));
       else
 	{
 	  char const *e;
 	  char *u, *g;
-	  
+
 	  e = parse_user_spec (arg, &set_owner, &set_group, &u, &g);
 	  if (e)
 	    USAGE_ERROR ((0, 0, "%s: %s", arg, e));
@@ -540,7 +540,7 @@ crc newc odc bin ustar tar (all-caps also recognized)"), arg));
       if (warn_control (arg))
 	USAGE_ERROR ((0, 0, _("Invalid value for --warning option: %s"), arg));
       break;
-      
+
     case SPARSE_OPTION:
       sparse_flag = true;
       break;
@@ -594,7 +594,7 @@ process_args (int argc, char *argv[])
   xstat = lstat;
 
   if (argp_parse (&argp, argc, argv, ARGP_IN_ORDER, &index, NULL))
-    exit (PAXEXIT_FAILURE); 
+    exit (PAXEXIT_FAILURE);
 
   /* Do error checking and look at other args.  */
 
@@ -627,9 +627,9 @@ process_args (int argc, char *argv[])
 	  CHECK_USAGE (retain_time_flag, "--preserve-modification-time",
 		       "--to-stdout");
 	}
-      
+
       if (archive_name && input_archive_name)
-	USAGE_ERROR ((0, 0,  
+	USAGE_ERROR ((0, 0,
 		      _("Both -I and -F are used in copy-in mode")));
 
       if (archive_format == arf_crcascii)
@@ -658,16 +658,16 @@ process_args (int argc, char *argv[])
       CHECK_USAGE (swap_halfwords_flag, "--swap-halfwords (--swap)",
 		   "--create");
       CHECK_USAGE (to_stdout_option, "--to-stdout", "--create");
-      
+
       if (append_flag && !(archive_name || output_archive_name))
-	USAGE_ERROR ((0, 0,  
+	USAGE_ERROR ((0, 0,
 		      _("--append is used but no archive file name "
 			"is given (use -F or -O options)")));
 
       CHECK_USAGE (rename_batch_file, "--rename-batch-file", "--create");
       CHECK_USAGE (input_archive_name, "-I", "--create");
       if (archive_name && output_archive_name)
-	USAGE_ERROR ((0, 0,  
+	USAGE_ERROR ((0, 0,
 		      _("Both -O and -F are used in copy-out mode")));
 
       if (archive_format == arf_unknown)
@@ -687,7 +687,7 @@ process_args (int argc, char *argv[])
 	USAGE_ERROR ((0, 0, _("Not enough arguments")));
 
       if (archive_format != arf_unknown)
-	USAGE_ERROR ((0, 0,  
+	USAGE_ERROR ((0, 0,
 		      _("Archive format is not specified in copy-pass mode "
 			"(use --format option)")));
 
@@ -706,21 +706,21 @@ process_args (int argc, char *argv[])
       CHECK_USAGE (renumber_inodes_option, "--renumber-inodes",
 		   "--pass-through");
       CHECK_USAGE (ignore_devno_option, "--ignore-devno", "--pass-through");
-      
+
       directory_name = argv[index];
     }
 
   if (archive_name)
     {
       if (copy_function != process_copy_in && copy_function != process_copy_out)
-	error (PAXEXIT_FAILURE, 0, 
+	error (PAXEXIT_FAILURE, 0,
 	       _("-F can be used only with --create or --extract"));
       archive_des = open_archive (archive_name);
       if (archive_des < 0)
-	error (PAXEXIT_FAILURE, errno, _("Cannot open %s"), 
-               quotearg_colon (archive_name));
+	error (PAXEXIT_FAILURE, errno, _("Cannot open %s"),
+	       quotearg_colon (archive_name));
     }
-		     
+
   /* Prevent SysV non-root users from giving away files inadvertantly.
      This happens automatically on BSD, where only root can give
      away files.  */
@@ -783,7 +783,7 @@ main (int argc, char *argv[])
   set_program_name (argv[0]);
   argp_version_setup ("cpio", program_authors);
   process_args (argc, argv);
-  
+
   initialize_buffers ();
 
   (*copy_function) ();

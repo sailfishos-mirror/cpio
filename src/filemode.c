@@ -240,4 +240,3 @@ filemodestring (struct stat *statp, char *str)
 {
   mode_string (statp->st_mode, str);
 }
-

@@ -42,7 +42,7 @@ stash_tar_linkname (char *linkname)
 
 /* Try to split a long file name into prefix and suffix parts separated
    by a slash. Return the length of the prefix (not counting the slash). */
-   
+
 static size_t
 split_long_name (const char *name, size_t length)
 {
@@ -310,10 +310,10 @@ read_in_tar_header (struct cpio_file_stat *file_hdr, int in_des)
 	}
 
       if (archive_format != arf_ustar)
-        cpio_set_c_name (file_hdr, stash_tar_filename (NULL, tar_hdr->name));
+	cpio_set_c_name (file_hdr, stash_tar_filename (NULL, tar_hdr->name));
       else
-        cpio_set_c_name (file_hdr, stash_tar_filename (tar_hdr->prefix,
-                                                      tar_hdr->name));
+	cpio_set_c_name (file_hdr, stash_tar_filename (tar_hdr->prefix,
+						      tar_hdr->name));
 
       file_hdr->c_nlink = 1;
       file_hdr->c_mode = FROM_OCTAL (tar_hdr->mode);
@@ -353,14 +353,14 @@ read_in_tar_header (struct cpio_file_stat *file_hdr, int in_des)
 	  /* If a POSIX tar header has a valid linkname it's always supposed
 	     to set typeflag to be LNKTYPE.  System V.4 tar seems to
 	     be broken, and for device files with multiple links it
-	     puts the name of the link into linkname, but leaves typeflag 
+	     puts the name of the link into linkname, but leaves typeflag
 	     as CHRTYPE, BLKTYPE, FIFOTYPE, etc.  */
 	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname);
 
 	  /* Does POSIX say that the filesize must be 0 for devices?  We
 	     assume so, but HPUX's POSIX tar sets it to be 1 which causes
 	     us problems (when reading an archive we assume we can always
-	     skip to the next file by skipping filesize bytes).  For 
+	     skip to the next file by skipping filesize bytes).  For
 	     now at least, it's easier to clear filesize for devices,
 	     rather than check everywhere we skip in copyin.c.  */
 	  file_hdr->c_filesize = 0;

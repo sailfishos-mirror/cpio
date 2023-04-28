@@ -106,7 +106,7 @@ ds_append (dynamic_string *s, int c)
       s->ds_idx++;
       ds_resize (s, 0);
       s->ds_string[s->ds_idx] = 0;
-    }      
+    }
 }
 
 void
