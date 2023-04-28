@@ -1,10 +1,22 @@
-GNU cpio NEWS -- history of user-visible changes. 2021-01-08
+GNU cpio NEWS -- history of user-visible changes. 2023-04-28
 Copyright (C) 2003-2023 Free Software Foundation, Inc.
 See the end of file for copying conditions.
 
 Please send cpio bug reports to <bug-cpio@gnu.org>.
 
 Version 2.13.90 (git)
+
+* New option --ignore-dirnlink
+
+Valid in copy-out mode, it instructs cpio to ignore the actual number
+of links reported for each directory member and always store 2
+instead.
+
+* Changes in --reproducible option
+
+The --reproducible option implies --ignore-dirlink.  In other words,
+it is equivalent to --ignore-devno --ignore-dirnlink --renumber-inodes.
+
 
 Version 2.13 - Sergey Poznyakoff, 2019-11-06
 

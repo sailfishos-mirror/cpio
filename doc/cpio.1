@@ -13,7 +13,7 @@
 .\"
 .\" You should have received a copy of the GNU General Public License
 .\" along with GNU cpio.  If not, see <http://www.gnu.org/licenses/>.
-.TH CPIO 1 "February 13, 2022" "CPIO" "GNU CPIO"
+.TH CPIO 1 "April 28, 2023" "CPIO" "GNU CPIO"
 .SH NAME
 cpio \- copy files to and from archives
 .SH SYNOPSIS
@@ -264,11 +264,17 @@ Append to an existing archive.
 .TP
 .BR \-\-device\-independent ", " \-\-reproducible
 Create reproducible archives.  This is equivalent to
-.BR "\-\-ignore\-devno \-\-renumber\-inodes" .
+.BR "\-\-ignore\-devno \-\-ignore\-dirnlink \-\-renumber\-inodes" .
 .TP
 .B \-\-ignore\-devno
 Store 0 in the device number field of each archive member, instead of
 the actual device number.
+.TP
+.B \-\-ignore\-dirnlink
+Store 2 in the
+.I nlink
+field of each directory archive member,
+instead of the actual number of links.
 .TP
 \fB\-O\fR [[\fIUSER\fB@\fR]\fIHOST\fB:\fR]\fIARCHIVE-NAME\fR
 Use \fIARCHIVE-NAME\fR instead of standard output. Optional \fIUSER\fR and

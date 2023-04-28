@@ -475,7 +475,7 @@ Create leading directories where needed.
 @item --device-independent
 @itemx --reproducible
 Create reproducible archives.  This is equivalent to
-@option{--ignore-devno --renumber-inodes}.
+@option{--ignore-devno --ignore-dirnlink --renumber-inodes}.
 @item -D @var{dir}
 @itemx --directory=@var{dir}
 Change to directory @var{dir}
@@ -501,6 +501,9 @@ formats.
 @item --ignore-devno
 Store 0 in the device number field of each archive member, instead of
 the actual device number.
+@item --ignore-dirnlink
+Store 2 in the @code{nlink} field of each directory archive member,
+instead of the actual number of links.
 @item -l
 @itemx --link
 Link files instead of copying them, when possible.

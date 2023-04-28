@@ -732,6 +732,8 @@ process_copy_out (void)
 
 	    case CP_IFDIR:
 	      file_hdr.c_filesize = 0;
+	      if (ignore_dirnlink_option)
+		file_hdr.c_nlink = 2;
 	      if (write_out_header (&file_hdr, out_file_des))
 		continue;
 	      break;

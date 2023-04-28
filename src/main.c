@@ -60,6 +60,7 @@ enum cpio_options {
   TO_STDOUT_OPTION,
   RENUMBER_INODES_OPTION,
   IGNORE_DEVNO_OPTION,
+  IGNORE_DIRNLINK_OPTION,
   DEVICE_INDEPENDENT_OPTION
 };
 
@@ -196,6 +197,8 @@ static struct argp_option options[] = {
    N_("Renumber inodes") },
   {"ignore-devno", IGNORE_DEVNO_OPTION, NULL, 0,
    N_("Don't store device numbers") },
+  {"ignore-dirnlink", IGNORE_DIRNLINK_OPTION, NULL, 0,
+   N_("ignore number of links of a directory; always assume 2") },
   {"device-independent", DEVICE_INDEPENDENT_OPTION, NULL, 0,
    N_("Create device-independent (reproducible) archives") },
   {"reproducible", 0, NULL, OPTION_ALIAS },
@@ -459,8 +462,13 @@ crc newc odc bin ustar tar (all-caps also recognized)"), arg));
       renumber_inodes_option = 1;
       break;
 
+    case IGNORE_DIRNLINK_OPTION:
+      ignore_dirnlink_option = 1;
+      break;
+      
     case DEVICE_INDEPENDENT_OPTION:
-      ignore_devno_option = renumber_inodes_option = 1;
+      ignore_devno_option = renumber_inodes_option =
+	ignore_dirnlink_option = 1;
       break;
       
     case RSH_COMMAND_OPTION:

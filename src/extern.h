@@ -58,6 +58,7 @@ extern unsigned int warn_option;
 extern mode_t newdir_umask;
 extern int renumber_inodes_option;
 extern int ignore_devno_option;
+extern int ignore_dirnlink_option;
 
 /* Values for warn_option */
 #define CPIO_WARN_NONE     0

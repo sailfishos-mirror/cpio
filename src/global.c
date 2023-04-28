@@ -194,4 +194,4 @@ char *change_directory_option;
 
 int renumber_inodes_option;
 int ignore_devno_option;
-
+int ignore_dirnlink_option;
