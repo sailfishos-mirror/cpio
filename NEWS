@@ -1,4 +1,4 @@
-GNU cpio NEWS -- history of user-visible changes. 2023-04-28
+GNU cpio NEWS -- history of user-visible changes. 2023-04-29
 Copyright (C) 2003-2023 Free Software Foundation, Inc.
 See the end of file for copying conditions.
 
@@ -16,6 +16,22 @@ instead.
 
 The --reproducible option implies --ignore-dirlink.  In other words,
 it is equivalent to --ignore-devno --ignore-dirnlink --renumber-inodes.
+
+* Use GNU ls algorithm for deciding timestamp format in -tv mode
+
+* Bugfixes
+
+** Fix cpio header verification.
+
+** Fix handling of device numbers on copy out.
+
+** Fix calculation of CRC in copy-out mode.
+
+** Rewrite the fix for CVE-2015-1197.
+
+** Fix combination of --create --append --directory.
+
+** Fix appending to archives bigger than 2G.
 
 
 Version 2.13 - Sergey Poznyakoff, 2019-11-06
@@ -38,7 +54,7 @@ number.
 Renumber inodes when storing them in the archive.
 
 ** --device-independent or --reproducible
-Create reproducible archives.  This is equivalent to 
+Create reproducible archives.  This is equivalent to
 --ignore-devno --renumber-inodes.
 
 Version 2.11 - Sergey Poznyakoff, 2010-03-10
@@ -120,7 +136,7 @@ default. See below.
 * New option --to-stdout extracts files to standard output.
 
 * The output of `cpio --help' is largely improved.
-       
+
 * Bugfixes:
 ** If a file grew n bytes in copy-pass mode, these n bytes got prepended
 to the contents of all subsequent files.
@@ -146,7 +162,7 @@ Major changes in version 2.3:
 
 * in newc and crc format archives, only store 1 copy of multiply linked files
 * handle multiply linked devices properly
-* handle multiply linked files with cpio -pl even when the source and 
+* handle multiply linked files with cpio -pl even when the source and
   destination are on different file systems
 * support HPUX Context Dependent Files
 * read and write HPUX cpio archives
