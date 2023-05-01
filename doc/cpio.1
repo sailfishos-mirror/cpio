@@ -13,7 +13,7 @@
 .\"
 .\" You should have received a copy of the GNU General Public License
 .\" along with GNU cpio.  If not, see <http://www.gnu.org/licenses/>.
-.TH CPIO 1 "April 28, 2023" "CPIO" "GNU CPIO"
+.TH CPIO 1 "April 29, 2023" "CPIO" "GNU CPIO"
 .SH NAME
 cpio \- copy files to and from archives
 .SH SYNOPSIS
@@ -45,7 +45,7 @@ cpio \- copy files to and from archives
 [\fB\-\-verbose\fR] [\fB\-\-block\-size=\fIBLOCKS\fR]
 [\fB\-\-swap\-halfwords\fR] [\fB\-\-io\-size=\fIBYTES\fR]
 [\fB\-\-pattern\-file=\fIFILE\fR] [\fB\-\-format=\fIFORMAT\fR]
-[\fB\-\-owner=\fR[\fIUSER][\fB:.\fR][\fIGROUP\fR]]
+[\fB\-\-owner=\fR[\fIUSER\fR][\fB:.\fR][\fIGROUP\fR]]
 [\fB\-\-no\-preserve\-owner\fR] [\fB\-\-message=\fIMESSAGE\fR]
 [\fB\-\-force\-local\fR] [\fB\-\-no\-absolute\-filenames\fR] [\fB\-\-sparse\fR]
 [\fB\-\-only\-verify\-crc\fR] [\fB\-\-to\-stdout\fR] [\fB\-\-quiet\fR]
@@ -108,7 +108,7 @@ supplied with the \fB\-\-file\fR option) and extract files from it, or
 (if the \fB\-t\fR option is given) list its contents to the standard
 output.  If one or more \fIpattern\fRs are supplied, read or list only
 files matching these patterns.  The \fB\-t\fR option alone implies
-\fB\-i\fR. 
+\fB\-i\fR.
 .TP
 .BR \-p ", " \-\-pass\-through
 Pass-through.  Read a list of file names from the standard input and
@@ -229,7 +229,7 @@ Print \fISTRING\fR when the end of a volume of the backup media is reached.
 .TP
 .BR \-b ", " \-\-swap
 Swap both halfwords of words and bytes of halfwords in the data.
-Equivalent to \fB\-sS\fR. 
+Equivalent to \fB\-sS\fR.
 .TP
 .BR \-f ", " \-\-nonmatching
 Only copy files that do not match any of the given patterns.
@@ -306,7 +306,7 @@ newlines.
 .TP
 .BR \-a ", " \-\-reset\-access\-time
 Reset the access times of files after reading them.
-.TP                            
+.TP
 \fB\-I\fR [[\fIUSER\fB@\fR]\fIHOST\fB:\fR]\fIARCHIVE-NAME\fR
 Use \fIARCHIVE-NAME\fR instead of standard input. Optional \fIUSER\fR and
 \fIHOST\fR specify the user and host names in case of a remote
@@ -359,4 +359,3 @@ There is NO WARRANTY, to the extent permitted by law.
 .\" time-stamp-end: "\""
 .\" time-stamp-line-limit: 20
 .\" end:
-
