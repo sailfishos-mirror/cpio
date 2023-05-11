@@ -43,8 +43,22 @@ AC_TYPE_UID_T
 AC_CHECK_TYPE(gid_t, int)
 
 AC_HEADER_DIRENT
-AX_COMPILE_CHECK_RETTYPE([major], [0])
-AX_COMPILE_CHECK_RETTYPE([minor], [0])
+AX_COMPILE_CHECK_RETTYPE([major], [0], [
+#include <sys/types.h>
+#ifdef MAJOR_IN_MKDEV
+# include <sys/mkdev.h>
+#endif
+#ifdef MAJOR_IN_SYSMACROS
+# include <sys/sysmacros.h>
+#endif])
+AX_COMPILE_CHECK_RETTYPE([minor], [0], [
+#include <sys/types.h>
+#ifdef MAJOR_IN_MKDEV
+# include <sys/mkdev.h>
+#endif
+#ifdef MAJOR_IN_SYSMACROS
+# include <sys/sysmacros.h>
+#endif])
 
 AC_CHECK_FUNCS([fchmod fchown])
 # This is needed for mingw build
