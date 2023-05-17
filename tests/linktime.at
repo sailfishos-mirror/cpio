@@ -1,0 +1,63 @@
+# Process this file with autom4te to create testsuite.  -*- Autotest -*-
+# Copyright (C) 2023 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License along
+# with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+AT_SETUP([restoring symlink times])
+AT_KEYWORDS([linktime copyin copypass])
+
+AT_DATA([filelist],[file
+symlink
+])
+
+AT_DATA([filelist_rev],[symlink
+file
+])
+
+AT_CHECK(
+[mkdir dir
+cd dir
+genfile --file file
+ln -s file symlink || AT_SKIP_TEST
+genfile -th --date '2 days ago' symlink || AT_SKIP_TEST
+cd ..
+])
+
+AT_CHECK(
+[time_orig=$(genfile -h -Smtime dir/symlink)
+rm -f file symlink
+cpio -D dir --quiet -o < filelist > arc.cpio
+cpio -m --quiet -i < arc.cpio
+time=$(genfile -h -Smtime symlink)
+test "$time" -eq "$time_orig"
+])
+
+AT_CHECK(
+[time_orig=$(genfile -h -Smtime dir/symlink)
+rm -f file symlink
+cpio -D dir --quiet -o < filelist_rev > arc.cpio
+cpio -m --quiet -i < arc.cpio
+time=$(genfile -h -Smtime symlink)
+test "$time" -eq "$time_orig"
+])
+
+AT_CHECK(
+[time_orig=$(genfile -h -Smtime dir/symlink)
+rm -f file symlink
+cpio -D dir -m --quiet -p . < filelist 
+time=$(genfile -h -Smtime symlink)
+test "$time" -eq "$time_orig"
+])
+
+AT_CLEANUP

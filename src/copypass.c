@@ -193,11 +193,13 @@ process_copy_pass (void)
 		  set_file_times (in_file_des,
 				  input_name.ds_string,
 				  in_file_stat.st_atime,
-				  in_file_stat.st_mtime);
+				  in_file_stat.st_mtime,
+				  0);
 		  set_file_times (out_file_des,
 				  output_name.ds_string,
 				  in_file_stat.st_atime,
-				  in_file_stat.st_mtime);
+				  in_file_stat.st_mtime,
+				  0);
 		}
 
 	      if (close (in_file_des) < 0)
@@ -300,6 +302,11 @@ process_copy_pass (void)
 		  && errno != EPERM)
 		chown_error_details (output_name.ds_string, uid, gid);
 	    }
+
+	  if (retain_time_flag)
+	    set_file_times (-1, output_name.ds_string,
+			    in_file_stat.st_atime, in_file_stat.st_mtime,
+			    AT_SYMLINK_NOFOLLOW);
 	  free (link_name);
 	}
 #endif

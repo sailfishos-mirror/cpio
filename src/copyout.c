@@ -227,7 +227,7 @@ writeout_defered_file (struct cpio_file_stat *header, int out_file_des)
 
   if (reset_time_flag)
     set_file_times (in_file_des, file_hdr.c_name, file_hdr.c_mtime,
-		    file_hdr.c_mtime);
+		    file_hdr.c_mtime, 0);
   if (close (in_file_des) < 0)
     close_error (header->c_name);
 }
@@ -725,7 +725,7 @@ process_copy_out (void)
 	      if (reset_time_flag)
 		set_file_times (in_file_des,
 				orig_file_name,
-				file_stat.st_atime, file_stat.st_mtime);
+				file_stat.st_atime, file_stat.st_mtime, 0);
 	      if (close (in_file_des) < 0)
 		close_error (orig_file_name);
 	      break;

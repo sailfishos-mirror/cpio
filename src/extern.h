@@ -204,7 +204,7 @@ void write_nuls_to_file (off_t num_bytes, int out_des,
 
 void set_perms (int fd, struct cpio_file_stat *header);
 void set_file_times (int fd, const char *name, unsigned long atime,
-		     unsigned long mtime);
+		     unsigned long mtime, int atflag);
 void stat_to_cpio (struct cpio_file_stat *hdr, struct stat *st);
 void cpio_to_stat (struct stat *st, struct cpio_file_stat *hdr);
 void cpio_safer_name_suffix (char *name, bool link_target,

@@ -344,7 +344,7 @@ create_defered_links_to_skipped (struct cpio_file_stat *file_hdr,
    empty links that are still on the deferments list.  */
 
 static void
-create_final_defers ()
+create_final_defers (void)
 {
   struct deferment *d;
   int	link_res;
@@ -619,7 +619,7 @@ copyin_device (struct cpio_file_stat* file_hdr)
     chmod_error_details (file_hdr->c_name, file_hdr->c_mode);
   if (retain_time_flag)
     set_file_times (-1, file_hdr->c_name, file_hdr->c_mtime,
-		    file_hdr->c_mtime);
+		    file_hdr->c_mtime, 0);
 }
 
 struct delayed_link
@@ -737,12 +737,18 @@ replace_symlink_placeholders (void)
 		}
 	      if (res < 0)
 		symlink_error (dl->source, dl->target);
-	      else if (!no_chown_flag)
+	      else
 		{
-		  uid_t uid = set_owner_flag ? set_owner : dl->uid;
-		  gid_t gid = set_group_flag ? set_group : dl->gid;
-		  if (lchown (dl->target, uid, gid) < 0 && errno != EPERM)
-		    chown_error_details (dl->target, uid, gid);
+		  if (!no_chown_flag)
+		    {
+		      uid_t uid = set_owner_flag ? set_owner : dl->uid;
+		      gid_t gid = set_group_flag ? set_group : dl->gid;
+		      if (lchown (dl->target, uid, gid) < 0 && errno != EPERM)
+			chown_error_details (dl->target, uid, gid);
+		    }
+		  if (retain_time_flag)
+		    set_file_times (-1, dl->target, dl->mtime, dl->mtime,
+				    AT_SYMLINK_NOFOLLOW);
 		}
 	    }
 	}
@@ -797,6 +803,10 @@ copyin_link (struct cpio_file_stat *file_hdr, int in_file_des)
 	  if (lchown (file_hdr->c_name, uid, gid) < 0 && errno != EPERM)
 	    chown_error_details (file_hdr->c_name, uid, gid);
 	}
+
+      if (retain_time_flag)
+	set_file_times (-1, file_hdr->c_name, file_hdr->c_mtime,
+			file_hdr->c_mtime, AT_SYMLINK_NOFOLLOW);
     }
   free (link_name);
 }

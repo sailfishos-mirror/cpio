@@ -7,6 +7,7 @@ argp
 argp-version-etc
 dirname
 error
+fdutimensat
 fileblocks
 fnmatch-gnu
 full-write
@@ -27,7 +28,6 @@ stpcpy
 strerror
 timespec
 unlocked-io
-utimens
 xalloc
 xalloc-die
 xgetcwd

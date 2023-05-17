@@ -1235,12 +1235,13 @@ set_perms (int fd, struct cpio_file_stat *header)
   if (fchmod_or_chmod (fd, header->c_name, header->c_mode) < 0)
     chmod_error_details (header->c_name, header->c_mode);
   if (retain_time_flag)
-    set_file_times (fd, header->c_name, header->c_mtime, header->c_mtime);
+    set_file_times (fd, header->c_name, header->c_mtime, header->c_mtime, 0);
 }
 
 void
 set_file_times (int fd,
-		const char *name, unsigned long atime, unsigned long mtime)
+		const char *name, unsigned long atime, unsigned long mtime,
+		int atflag)
 {
   struct timespec ts[2];
 
@@ -1251,7 +1252,7 @@ set_file_times (int fd,
 
   /* Silently ignore EROFS because reading the file won't have upset its
      timestamp if it's on a read-only filesystem. */
-  if (fdutimens (fd, name, ts) < 0 && errno != EROFS)
+  if (fdutimensat (fd, AT_FDCWD, name, ts, atflag) < 0 && errno != EROFS)
     utime_error (name);
 }
 

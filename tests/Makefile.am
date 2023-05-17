@@ -57,7 +57,9 @@ TESTSUITE_AT = \
  version.at\
  big-block-size.at\
  CVE-2015-1197.at\
- CVE-2019-14866.at
+ CVE-2019-14866.at\
+ linktime.at\
+ linktime01.at
 
 TESTSUITE = $(srcdir)/testsuite
 
