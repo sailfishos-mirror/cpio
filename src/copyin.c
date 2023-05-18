@@ -668,6 +668,12 @@ symlink_placeholder (char *oldpath, char *newpath, struct cpio_file_stat *file_s
   struct delayed_link *p;
   size_t newlen = strlen (newpath);
 
+  if (fd < 0 && create_dir_flag)
+    {
+      create_all_directories (newpath);
+      fd = open (newpath, O_WRONLY | O_CREAT | O_EXCL, 0);
+    }
+
   if (fd < 0)
     {
       open_error (newpath);
