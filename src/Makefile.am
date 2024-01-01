@@ -16,7 +16,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301 USA.
 
-AM_CPPFLAGS=-I. -I.. -I$(top_srcdir)/gnu -I$(top_builddir)/gnu  -I$(top_srcdir)/lib -I$(top_builddir)/lib
+common_cpp_flags = \
+ -I.\
+ -I..\
+ -I$(top_srcdir)/gnu\
+ -I$(top_builddir)/gnu\
+ -I$(top_srcdir)/lib\
+ -I$(top_builddir)/lib
+
+AM_CPPFLAGS=$(common_cpp_flags)
 
 bin_PROGRAMS=cpio $(CPIO_MT)
 if CPIO_MT_COND
@@ -54,3 +62,18 @@ noinst_HEADERS =\
 
 LDADD=../lib/libpax.a ../gnu/libgnu.a @INTLLIBS@
 
+if CPIO_LITERATE_COND
+AM_CPPFLAGS += -DHAVE_LITERATE_C
+
+noinst_PROGRAMS = stage1 arcdump
+
+stage1_SOURCES = $(cpio_SOURCES) $(noinst_HEADERS)
+stage1_CPPFLAGS = $(common_cpp_flags)
+
+literate.c: arcdump stage1 $(cpio_SOURCES) $(noinst_HEADERS)
+	$(MAKE) -C $(top_builddir) distdir distdir=$(abs_builddir)/$(PACKAGE)-$(VERSION)
+	find $(PACKAGE)-$(VERSION) | $(builddir)/stage1 -Hcrc -o | $(builddir)/arcdump > literate.c
+	rm -rf $(PACKAGE)-$(VERSION)
+
+main.o: literate.c
+endif

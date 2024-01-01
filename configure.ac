@@ -100,6 +100,11 @@ AM_GNU_GETTEXT_VERSION(0.19)
 
 LIBS="$LIBS $LIB_CLOCK_GETTIME"
 
+AC_ARG_ENABLE(literate,
+ AS_HELP_STRING([--enable-literate],[Enable literate executable]))
+
+AM_CONDITIONAL([CPIO_LITERATE_COND], [test "$enable_literate" = yes])
+
 # Initialize the test suite.
 AC_CONFIG_TESTDIR(tests)
 AC_CONFIG_FILES([tests/Makefile tests/atlocal]) # FIXME: tests/preset?

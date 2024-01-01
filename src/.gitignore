@@ -1,2 +1,5 @@
 cpio
 .gdbinit
+arcdump
+stage1
+literate.c

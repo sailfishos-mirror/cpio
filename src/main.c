@@ -61,7 +61,8 @@ enum cpio_options {
   RENUMBER_INODES_OPTION,
   IGNORE_DEVNO_OPTION,
   IGNORE_DIRNLINK_OPTION,
-  DEVICE_INDEPENDENT_OPTION
+  DEVICE_INDEPENDENT_OPTION,
+  DUMP_SOURCE_OPTION
 };
 
 const char *program_authors[] =
@@ -105,6 +106,10 @@ static struct argp_option options[] = {
    N_("Run in copy-pass mode"), GRID },
   {"list", 't', 0, 0,
    N_("Print a table of contents of the input"), GRID },
+#ifdef HAVE_LITERATE_C
+  {"dump-source", DUMP_SOURCE_OPTION, N_("FILE"), OPTION_ARG_OPTIONAL,
+   N_("Dump source cpio archive"), GRID },
+#endif
 #undef GRID
 
   /* ********** */
@@ -294,6 +299,29 @@ warn_control (char *arg)
 
   return 1;
 }
+
+#ifdef HAVE_LITERATE_C
+static char cpio_source_archive[] = {
+#include "literate.c"
+};
+
+void
+literate_dump_archive (char const *file_name)
+{
+  FILE *fp = stdout;
+  if (file_name)
+    {
+      fp = fopen (file_name, "w");
+      if (fp == 0)
+	{
+	  error (PAXEXIT_FAILURE, errno,
+		 _("can't open output file %s for writing"),
+		 file_name);
+	}
+    }
+  fwrite (cpio_source_archive, sizeof (cpio_source_archive), 1, fp);
+}
+#endif
 
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
@@ -558,6 +586,12 @@ crc newc odc bin ustar tar (all-caps also recognized)"), arg));
     case TO_STDOUT_OPTION:
       to_stdout_option = true;
       break;
+
+#ifdef HAVE_LITERATE_C
+    case DUMP_SOURCE_OPTION:
+      literate_dump_archive (optarg);
+      exit (0);
+#endif
 
     default:
       return ARGP_ERR_UNKNOWN;
