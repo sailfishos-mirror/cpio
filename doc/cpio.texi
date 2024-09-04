@@ -41,8 +41,8 @@ Software Foundation raise funds for GNU development.''
 @insertcopying
 @sp 2
 Published by the Free Software Foundation @*
-51 Franklin Street, Fifth Floor, @*
-Boston, MA 02110-1301, USA @*
+31 Milk Street, @*
+Boston, MA 02196, USA @*
 @end titlepage
 
 @ifnottex
