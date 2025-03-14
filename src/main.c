@@ -294,6 +294,20 @@ warn_control (char *arg)
   return 1;
 }
 
+static int
+get_block_size (char *arg, int min, int max)
+{
+  long n;
+  char *p;
+  errno = 0;
+  n = strtol (arg, &p, 10);
+  if (errno || *p)
+    USAGE_ERROR ((0, 0, _("invalid block size: %s"), arg));
+  if (n < min || n > max)
+    USAGE_ERROR ((0, 0, _("block size out of allowed range: %s"), arg));
+  return n;
+}
+
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
@@ -321,10 +335,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case BLOCK_SIZE_OPTION:		/* --block-size */
-      io_block_size = atoi (arg);
-      if (io_block_size < 1 || io_block_size > INT_MAX/512)
-	USAGE_ERROR ((0, 0, _("invalid block size")));
-      io_block_size *= 512;
+      io_block_size = get_block_size (arg, 1, INT_MAX / 512) * 512;
       break;
 
     case 'c':		/* Use the old portable ASCII format.  */
@@ -338,9 +349,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case 'C':		/* Block size.  */
-      io_block_size = atoi (arg);
-      if (io_block_size < 1)
-	USAGE_ERROR ((0, 0, _("invalid block size")));
+      io_block_size = get_block_size (arg, 1, INT_MAX);
       break;
 
     case 'd':		/* Create directories where needed.  */
