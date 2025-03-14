@@ -1,5 +1,5 @@
 .\" This file is part of GNU cpio. -*- nroff -*-
-.\" Copyright 2014-2024 Free Software Foundation, Inc.
+.\" Copyright 2014-2025 Free Software Foundation, Inc.
 .\"
 .\" GNU cpio is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -13,10 +13,12 @@
 .\"
 .\" You should have received a copy of the GNU General Public License
 .\" along with GNU cpio.  If not, see <http://www.gnu.org/licenses/>.
-.TH CPIO 1 "April 29, 2023" "CPIO" "GNU CPIO"
+.TH CPIO 1 "March 14, 2025" "CPIO" "GNU CPIO"
 .SH NAME
 cpio \- copy files to and from archives
 .SH SYNOPSIS
+.nh
+.na
 .B cpio
 {\fB\-o\fR|\fB\-\-create\fR} [\fB\-0acvABLV\fR] [\fB\-C\fR \fIBYTES\fR]
 [\fB\-H\fR \fIFORMAT\fR] [\fB\-M\fR \fIMESSAGE\fR]
@@ -65,6 +67,8 @@ cpio \- copy files to and from archives
 
 .B cpio
 {\fB\-?\fR|\fB\-\-help\fR|\fB\-\-usage\fR|\fB\-\-version\fR}
+.ad
+.hy
 .SH NOTE
 This manpage is a short description of GNU \fBcpio\fR.  For a detailed
 discussion, including examples and usage recommendations, refer to the
@@ -207,7 +211,7 @@ Print a "\fB.\fR" for each file processed.
 Controls what warnings are displayed.  The \fIFLAG\fR is one of
 .BR none ,
 to disable all warnings,
-.BR all
+.B all
 to enable them,
 .BR truncate ,
 to enable warnings about field truncation, and
@@ -344,7 +348,7 @@ complete the requested operation.  On errors, it exits with code \fB2\fR.
 .SH "BUG REPORTS"
 Report bugs to <bug\-cpio@gnu.org>.
 .SH COPYRIGHT
-Copyright \(co 2014--2023 Free Software Foundation, Inc.
+Copyright \(co 2014\(en2025 Free Software Foundation, Inc.
 .br
 .na
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
