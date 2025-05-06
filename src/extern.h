@@ -96,8 +96,8 @@ extern char input_is_special;
 extern char output_is_special;
 extern char input_is_seekable;
 extern char output_is_seekable;
-extern int (*xstat) ();
-extern void (*copy_function) ();
+extern int (*xstat) (const char *, struct stat *);
+extern void (*copy_function) (void);
 extern char *change_directory_option;
 
 #define STRINGIFY_BIGINT(i, b) umaxtostr (i, b)

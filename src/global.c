@@ -184,10 +184,10 @@ bool to_stdout_option = false;
 
 /* A pointer to either lstat or stat, depending on whether
    dereferencing of symlinks is done for input files.  */
-int (*xstat) ();
+int (*xstat) (const char *, struct stat *);
 
 /* Which copy operation to perform. (-i, -o, -p) */
-void (*copy_function) () = 0;
+void (*copy_function) (void) = 0;
 
 char *change_directory_option;
 
