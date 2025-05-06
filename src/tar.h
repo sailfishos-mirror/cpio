@@ -101,7 +101,7 @@ Public License along with this library.  If not, see
 
 /* Contents of magic field and its length.  */
 #define TMAGIC	"ustar"
-#define TMAGLEN	6
+#define TMAGLEN	sizeof(TMAGIC)
 
 /* Contents of the version field and its length.  */
 #define TVERSION "00"
