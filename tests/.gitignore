@@ -6,5 +6,6 @@ genfile.c
 package.m4
 testsuite
 genfile
+sizemax
 testsuite.dir
 testsuite.log

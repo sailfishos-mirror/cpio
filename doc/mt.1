@@ -1,5 +1,5 @@
 .\" This file is part of GNU cpio. -*- nroff -*-
-.\" Copyright 2014-2024 Free Software Foundation, Inc.
+.\" Copyright 2014\(en2025 Free Software Foundation, Inc.
 .\"
 .\" GNU cpio is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 .\"
 .\" You should have received a copy of the GNU General Public License
 .\" along with GNU cpio.  If not, see <http://www.gnu.org/licenses/>.
-.TH MT 1 "January 28, 2014" "MT" "GNU CPIO"
+.TH MT 1 "May 17, 2025" "MT" "GNU CPIO"
 .SH NAME
 mt \- control magnetic tape drive operation
 .SH SYNOPSIS
@@ -57,70 +57,70 @@ after the operation name and defaults to 1.
 Write
 .I count
 EOF marks at current position.
-.TP 
+.TP
 .B fsf
 Forward space
 .I count
 files.
 The tape is positioned on the first block of the next file.
-.TP 
+.TP
 .B bsf
 Backward space
 .I count
 files.
 The tape is positioned on the first block of the next file.
-.TP 
+.TP
 .B fsr
 Forward space
 .I count
 records.
-.TP 
+.TP
 .B bsr
 Backward space
 .I count
 records.
-.TP 
+.TP
 .B bsfm
 Backward space
 .I count
 file marks.
 The tape is positioned on the beginning-of-the-tape side of
 the file mark.
-.TP 
+.TP
 .B fsfm
 Forward space
 .I count
 file marks.
 The tape is positioned on the beginning-of-the-tape side of
 the file mark.
-.TP 
+.TP
 .B asf
 Absolute space to file number
 .IR count .
 Equivalent to rewind followed by fsf
 .IR count .
-.TP 
+.TP
 .B seek
 Seek to block number
 .IR count .
-.TP 
+.TP
 .B eom
 Space to the end of the recorded media on the tape
 (for appending files onto tapes).
-.TP 
+.TP
 .B rewind
 Rewind the tape.
-.TP 
+.TP
 .BR offline ", " rewoffl
 Rewind the tape and, if applicable, unload the tape.
-.TP 
+.TP
 .B status
 Print status information about the tape unit.
-.TP 
+.TP
 .B retension
 Rewind the tape, then wind it to the end of the reel,
 then rewind it again.
-.TP 
+.TP
 .B erase
 Erase the tape.
 .PP
@@ -157,7 +157,7 @@ Print the version number of
 .SH "BUG REPORTS"
 Report bugs to <bug\-cpio@gnu.org>.
 .SH COPYRIGHT
-Copyright \(co 2014 Free Software Foundation, Inc.
+Copyright \(co 2014, 2025 Free Software Foundation, Inc.
 .br
 .na
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -172,4 +172,3 @@ There is NO WARRANTY, to the extent permitted by law.
 .\" time-stamp-end: "\""
 .\" time-stamp-line-limit: 20
 .\" end:
-
