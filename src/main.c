@@ -736,6 +736,20 @@ process_args (int argc, char *argv[])
     no_chown_flag = true;
 }
 
+/* Make sure the input buffer can always hold 2 blocks and that it
+   is big enough to hold 1 tar record (512 bytes) even if it
+   is not aligned on a block boundary.  The extra buffer space
+   is needed by process_copyin and peek_in_buf to automatically
+   figure out what kind of archive it is reading.  */
+static size_t
+copyin_buf_size (void)
+{
+  if (io_block_size >= 512)
+    return 2 * io_block_size;
+  else
+    return 1024;
+}
+
 /* Initialize the input and output buffers to their proper size and
    initialize all variables associated with the input and output
    buffers.  */
@@ -743,24 +757,18 @@ process_args (int argc, char *argv[])
 void
 initialize_buffers ()
 {
-  int in_buf_size, out_buf_size;
+  size_t in_buf_size, out_buf_size;
 
   if (copy_function == process_copy_in)
     {
-      /* Make sure the input buffer can always hold 2 blocks and that it
-	 is big enough to hold 1 tar record (512 bytes) even if it
-	 is not aligned on a block boundary.  The extra buffer space
-	 is needed by process_copyin and peek_in_buf to automatically
-	 figure out what kind of archive it is reading.  */
-      if (io_block_size >= 512)
-	in_buf_size = 2 * io_block_size;
-      else
-	in_buf_size = 1024;
+      in_buf_size = copyin_buf_size ();
       out_buf_size = DISK_IO_BLOCK_SIZE;
     }
   else if (copy_function == process_copy_out)
     {
-      in_buf_size = DISK_IO_BLOCK_SIZE;
+      /* In append mode, process_copy_out calls process_copy_in first,
+         hence the required input buffer size is computed as above. */
+      in_buf_size = append_flag ? copyin_buf_size () : DISK_IO_BLOCK_SIZE;
       out_buf_size = io_block_size;
     }
   else
