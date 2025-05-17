@@ -80,13 +80,14 @@ installcheck-local:
 	$(SHELL) $(TESTSUITE) $(TESTSUITEFLAGS) AUTOTEST_PATH=$(exec_prefix)/bin
 
 
-## ------------ ##
-## genfile      ##
-## ------------ ##
+## ------------------ ##
+## Auxiliary programs ##
+## ------------------ ##
 
-check_PROGRAMS = genfile
+check_PROGRAMS = genfile sizemax
 
 genfile_SOURCES = genfile.c argcv.c argcv.h
+sizemax_SOURCES = sizemax.c
 
 localedir = $(datadir)/locale
 AM_CPPFLAGS = \

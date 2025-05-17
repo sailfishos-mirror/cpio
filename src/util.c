@@ -419,7 +419,7 @@ write_nuls_to_file (off_t num_bytes, int out_des,
   off_t	blocks;
   off_t	extra_bytes;
   off_t	i;
-  static char zeros_512[512];
+  static char zeros_512[DISK_IO_BLOCK_SIZE];
 
   blocks = num_bytes / sizeof zeros_512;
   extra_bytes = num_bytes % sizeof zeros_512;
@@ -986,8 +986,6 @@ umasked_symlink (char *name1, char *name2, int mode)
 }
 #endif /* SYMLINK_USES_UMASK */
 
-#define DISKBLOCKSIZE	(512)
-
 static int
 buf_all_zeros (char *buf, int bufsize)
 {
@@ -1027,7 +1025,7 @@ sparse_write (int fildes, char *buf, size_t nbytes, bool flush)
     {
       size_t rest = nbytes;
 
-      if (rest < DISKBLOCKSIZE)
+      if (rest < DISK_IO_BLOCK_SIZE)
 	/* Force write */
 	state = not_in_zeros;
       else

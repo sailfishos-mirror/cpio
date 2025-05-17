@@ -26,7 +26,7 @@
 int reset_time_flag = false;
 
 /* Block size value, initially 512.  -B sets to 5120.  */
-int io_block_size = 512;
+size_t io_block_size = DISK_IO_BLOCK_SIZE;
 
 /* The header format to recognize and produce.  */
 enum archive_format archive_format = arf_unknown;

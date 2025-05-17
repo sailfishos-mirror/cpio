@@ -135,4 +135,8 @@ void cpio_file_stat_free (struct cpio_file_stat *file_hdr);
 void cpio_set_c_name(struct cpio_file_stat *file_hdr, char *name);
 void cpio_realloc_c_name (struct cpio_file_stat *file_hdr, size_t len);
 
+#ifndef SIZE_MAX
+# define SIZE_MAX (~(size_t)0)
+#endif
+
 #endif /* cpiohdr.h */

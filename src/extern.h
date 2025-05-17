@@ -28,7 +28,7 @@ enum archive_format
 
 extern enum archive_format archive_format;
 extern int reset_time_flag;
-extern int io_block_size;
+extern size_t io_block_size;
 extern int create_dir_flag;
 extern int rename_flag;
 extern char *rename_batch_file;
