@@ -996,11 +996,8 @@ from_ascii (char const *where, size_t digs, unsigned logbase)
   int overflow = 0;
   static char codetab[] = "0123456789ABCDEF";
 
-  for (; *buf == ' '; buf++)
-    {
-      if (buf == end)
-	return 0;
-    }
+  for (; buf < end && *buf == ' '; buf++)
+    ;
 
   if (buf == end || *buf == 0)
     return 0;
