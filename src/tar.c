@@ -127,6 +127,13 @@ tar_checksum (struct tar_header *tar_hdr)
     }							    \
   while (0)
 
+static void
+tarnamecpy (char *buf, char const *name, size_t size)
+{
+  strncpy (buf, name, size-1);
+  buf[size] = 0;
+}
+
 /* Write out header FILE_HDR, including the file name, to file
    descriptor OUT_DES.  */
 
@@ -215,10 +222,10 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
 
       name = getuser (file_hdr->c_uid);
       if (name)
-	strcpy (tar_hdr->uname, name);
+	tarnamecpy (tar_hdr->uname, name, sizeof (tar_hdr->uname));
       name = getgroup (file_hdr->c_gid);
       if (name)
-	strcpy (tar_hdr->gname, name);
+	tarnamecpy (tar_hdr->gname, name, sizeof (tar_hdr->gname));
 
       TO_OCT (file_hdr, c_rdev_maj, 8, tar_hdr, devmajor);
       TO_OCT (file_hdr, c_rdev_min, 8, tar_hdr, devminor);
