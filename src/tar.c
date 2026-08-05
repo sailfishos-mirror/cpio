@@ -131,7 +131,7 @@ static void
 tarnamecpy (char *buf, char const *name, size_t size)
 {
   strncpy (buf, name, size-1);
-  buf[size] = 0;
+  buf[size-1] = 0;
 }
 
 /* Write out header FILE_HDR, including the file name, to file
