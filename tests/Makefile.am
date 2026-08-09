@@ -57,7 +57,8 @@ TESTSUITE_AT = \
  CVE-2015-1197.at\
  CVE-2019-14866.at\
  linktime.at\
- linktime01.at
+ linktime01.at\
+ symlink-tar-abs.at
 
 TESTSUITE = $(srcdir)/testsuite
 

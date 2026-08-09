@@ -46,3 +46,6 @@ m4_include([CVE-2019-14866.at])
 
 m4_include([linktime.at])
 m4_include([linktime01.at])
+
+
+m4_include([symlink-tar-abs.at])

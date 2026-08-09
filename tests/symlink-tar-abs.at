@@ -1,0 +1,54 @@
+# Process this file with autom4te to create testsuite.  -*- Autotest -*-
+# Copyright (C) 2026 Free Software Foundation, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# --no-absolute-filenames must not rewrite symbolic link targets.  A
+# symlink target is stored verbatim and is resolved only when the link
+# is followed, so stripping a leading `/' or `../' from it silently
+# makes the link point somewhere else.  Hard link targets, which name
+# another member of the same archive, are still stripped.
+
+AT_SETUP([--no-absolute-filenames keeps symlink targets (tar format)])
+AT_KEYWORDS([symlink-tar-abs])
+
+AT_CHECK([
+file --help >/dev/null 2>&1 || AT_SKIP_TEST
+
+AT_DATA([filelist],
+[abslink
+dotdotlink
+])
+
+mkdir dir
+cd dir
+
+ln -s /absolute/file/name abslink
+ln -s ../relative/file/name dotdotlink
+cpio -o -H ustar < ../filelist > ../test.tar
+
+cd ..
+
+mkdir out
+cd out
+cpio -i --no-absolute-filenames < ../test.tar
+file -h abslink dotdotlink | sed -n 's/:.*symbolic link to/:/p'
+],
+[0],
+[abslink: /absolute/file/name
+dotdotlink: ../relative/file/name
+],
+[ignore])
+
+AT_CLEANUP

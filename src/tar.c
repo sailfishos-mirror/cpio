@@ -30,14 +30,19 @@
 /* Stash the tar linkname in static storage.  */
 
 static char *
-stash_tar_linkname (char *linkname)
+stash_tar_linkname (char *linkname, bool symlink_target)
 {
   static char hold_tar_linkname[TARLINKNAMESIZE + 1];
 
   strncpy (hold_tar_linkname, linkname, TARLINKNAMESIZE);
   hold_tar_linkname[TARLINKNAMESIZE] = '\0';
-  cpio_safer_name_suffix (hold_tar_linkname, true, !no_abs_paths_flag,
-  			  false);
+  /* A hard link target names another member of the same archive, so it
+     is subject to --no-absolute-filenames.  A symbolic link target is
+     stored verbatim and resolved only when the link is followed;
+     rewriting it would silently make the link point elsewhere.  */
+  if (!symlink_target)
+    cpio_safer_name_suffix (hold_tar_linkname, true, !no_abs_paths_flag,
+			    false);
   return hold_tar_linkname;
 }
 
@@ -383,7 +388,7 @@ read_in_tar_header (struct cpio_file_stat *file_hdr, int in_des)
 	     be broken, and for device files with multiple links it
 	     puts the name of the link into linkname, but leaves typeflag
 	     as CHRTYPE, BLKTYPE, FIFOTYPE, etc.  */
-	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname);
+	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname, false);
 
 	  /* Does POSIX say that the filesize must be 0 for devices?  We
 	     assume so, but HPUX's POSIX tar sets it to be 1 which causes
@@ -395,27 +400,27 @@ read_in_tar_header (struct cpio_file_stat *file_hdr, int in_des)
 	  break;
 	case BLKTYPE:
 	  file_hdr->c_mode |= CP_IFBLK;
-	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname);
+	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname, false);
 	  file_hdr->c_filesize = 0;
 	  break;
 #ifdef CP_IFIFO
 	case FIFOTYPE:
 	  file_hdr->c_mode |= CP_IFIFO;
-	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname);
+	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname, false);
 	  file_hdr->c_filesize = 0;
 	  break;
 #endif
 	case SYMTYPE:
 #ifdef CP_IFLNK
 	  file_hdr->c_mode |= CP_IFLNK;
-	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname);
+	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname, true);
 	  file_hdr->c_filesize = 0;
 	  break;
 	  /* Else fall through.  */
 #endif
 	case LNKTYPE:
 	  file_hdr->c_mode |= CP_IFREG;
-	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname);
+	  file_hdr->c_tar_linkname = stash_tar_linkname (tar_hdr->linkname, false);
 	  file_hdr->c_filesize = 0;
 	  break;
 
