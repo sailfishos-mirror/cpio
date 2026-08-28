@@ -127,12 +127,21 @@ tar_checksum (struct tar_header *tar_hdr)
     }							    \
   while (0)
 
+/*
+ * Copy user or group NAME to buffer BUF, SIZE bytes long.
+ * According to POSIX, both user and group name fields in the tar
+ * header are NUL-terminated character strings.
+ *
+ * Do nothing, if NAME is NULL or is longer than SIZE.
+ */
 static void
 tarnamecpy (char *buf, char const *name, size_t size)
 {
-  strncpy (buf, name, size-1);
-  buf[size-1] = 0;
+  if (name && strlen (name) + 1 < size)
+    strcpy (buf, name);
 }
+
+static int is_tar_filename_too_long (char *name);
 
 /* Write out header FILE_HDR, including the file name, to file
    descriptor OUT_DES.  */
@@ -144,6 +153,25 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
   union tar_record tar_rec;
   struct tar_header *tar_hdr = (struct tar_header *) &tar_rec;
 
+  if (is_tar_filename_too_long (file_hdr->c_name))
+    {
+      error (0, 0, _("%s: file name too long"), quote (file_hdr->c_name));
+      return 1;
+    }
+
+  /*
+   * Linkname is a "NUL-terminated character strings except when all
+   * characters in the array contain non-NUL characters including
+   * the last character.
+   */
+  if (file_hdr->c_tar_linkname &&
+      strlen (file_hdr->c_tar_linkname) > TARLINKNAMESIZE)
+    {
+      error (0, 0, _("%s: symbolic link too long"),
+	     quote (file_hdr->c_tar_linkname));
+      return 1;
+    }
+  
   memset (&tar_rec, 0, sizeof tar_rec);
 
   /* process_copy_out must ensure that file_hdr->c_name is short enough,
@@ -177,8 +205,6 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
     case CP_IFREG:
       if (file_hdr->c_tar_linkname)
 	{
-	  /* process_copy_out makes sure that c_tar_linkname is shorter
-	     than TARLINKNAMESIZE.  */
 	  strncpy (tar_hdr->linkname, file_hdr->c_tar_linkname,
 		   TARLINKNAMESIZE);
 	  tar_hdr->typeflag = LNKTYPE;
@@ -204,8 +230,6 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
 #ifdef CP_IFLNK
     case CP_IFLNK:
       tar_hdr->typeflag = SYMTYPE;
-      /* process_copy_out makes sure that c_tar_linkname is shorter
-	 than TARLINKNAMESIZE.  */
       strncpy (tar_hdr->linkname, file_hdr->c_tar_linkname,
 	       TARLINKNAMESIZE);
       to_ascii (tar_hdr->size, 0, 12, LG_8, true);
@@ -215,17 +239,13 @@ write_out_tar_header (struct cpio_file_stat *file_hdr, int out_des)
 
   if (archive_format == arf_ustar)
     {
-      char *name;
-
       memcpy (tar_hdr->magic, TMAGIC, TMAGLEN);
       memcpy (tar_hdr->version, TVERSION, TVERSLEN);
 
-      name = getuser (file_hdr->c_uid);
-      if (name)
-	tarnamecpy (tar_hdr->uname, name, sizeof (tar_hdr->uname));
-      name = getgroup (file_hdr->c_gid);
-      if (name)
-	tarnamecpy (tar_hdr->gname, name, sizeof (tar_hdr->gname));
+      tarnamecpy (tar_hdr->uname, getuser (file_hdr->c_uid),
+		  sizeof (tar_hdr->uname));
+      tarnamecpy (tar_hdr->gname, getgroup (file_hdr->c_gid),
+		  sizeof (tar_hdr->gname));
 
       TO_OCT (file_hdr, c_rdev_maj, 8, tar_hdr, devmajor);
       TO_OCT (file_hdr, c_rdev_min, 8, tar_hdr, devminor);
@@ -453,7 +473,7 @@ is_tar_header (char *buf)
    the "prefix" and the "name".  If it is not possible to break down
    the filename like this then it will not fit.  */
 
-int
+static int
 is_tar_filename_too_long (char *name)
 {
   int whole_name_len;
@@ -482,3 +502,10 @@ is_tar_filename_too_long (char *name)
 
   return false;
 }
+
+int
+is_tar_linkname_too_long (char *name)
+{
+  return strlen (name) > TARLINKNAMESIZE;
+}
+

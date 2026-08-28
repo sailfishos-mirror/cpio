@@ -557,11 +557,6 @@ write_out_header (struct cpio_file_stat *file_hdr, int out_des)
 
     case arf_tar:
     case arf_ustar:
-      if (is_tar_filename_too_long (file_hdr->c_name))
-	{
-	  error (0, 0, _("%s: file name too long"), quote (file_hdr->c_name));
-	  return 1;
-	}
       return write_out_tar_header (file_hdr, out_des);
 
     case arf_binary:
@@ -798,18 +793,9 @@ process_copy_out (void)
 		file_hdr.c_filesize = link_size;
 		if (archive_format == arf_tar || archive_format == arf_ustar)
 		  {
-		    if (link_size + 1 > 100)
-		      {
-			error (0, 0, _("%s: symbolic link too long"),
-			       quote (file_hdr.c_name));
-		      }
-		    else
-		      {
-			link_name[link_size] = '\0';
-			file_hdr.c_tar_linkname = link_name;
-			if (write_out_header (&file_hdr, out_file_des))
-			  continue;
-		      }
+		    file_hdr.c_tar_linkname = link_name;
+		    if (write_out_header (&file_hdr, out_file_des))
+		      continue;
 		  }
 		else
 		  {

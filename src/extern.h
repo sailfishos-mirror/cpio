@@ -157,7 +157,6 @@ int null_block (long *block, int size);
 void read_in_tar_header (struct cpio_file_stat *file_hdr, int in_des);
 int otoa (char *s, unsigned long *n);
 int is_tar_header (char *buf);
-int is_tar_filename_too_long (char *name);
 
 /* userspec.c */
 const char *parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
