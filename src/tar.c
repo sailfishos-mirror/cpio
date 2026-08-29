@@ -351,16 +351,23 @@ read_in_tar_header (struct cpio_file_stat *file_hdr, int in_des)
       file_hdr->c_nlink = 1;
       file_hdr->c_mode = FROM_OCTAL (tar_hdr->mode);
       file_hdr->c_mode = file_hdr->c_mode & 07777;
-  /* Debian hack: This version of cpio uses the -n flag also to extract
-     tar archives using the numeric UID/GID instead of the user/group
-     names in /etc/passwd and /etc/groups.  (98/10/15) -BEM */
+
+      /* Make sure uname and gname are nul-terminated */
+      if (!memchr (tar_hdr->uname, 0, sizeof (tar_hdr->uname)))
+	tar_hdr->uname[0] = 0;
+
+      if (!memchr (tar_hdr->gname, 0, sizeof (tar_hdr->gname)))
+	tar_hdr->gname[0] = 0;
+
       if (archive_format == arf_ustar && !numeric_uid
+	  && tar_hdr->uname[0]
 	  && (uidp = getuidbyname (tar_hdr->uname)))
 	file_hdr->c_uid = *uidp;
       else
 	file_hdr->c_uid = FROM_OCTAL (tar_hdr->uid);
 
       if (archive_format == arf_ustar && !numeric_uid
+	  && tar_hdr->gname[0]
 	  && (gidp = getgidbyname (tar_hdr->gname)))
 	file_hdr->c_gid = *gidp;
       else
